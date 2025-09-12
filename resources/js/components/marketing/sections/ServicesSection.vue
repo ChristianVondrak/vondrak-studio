@@ -1,15 +1,11 @@
 <template>
   <section id="services" class="section section--pricing">
     <BaseContainer>
-      <h2 class="section-title title-center">Planes y precios</h2>
+      <h2 class="section-title title-center" v-reveal:up.d80>Planes y precios</h2>
 
-      <div class="pricing">
-        <PricingCard
-          :title-before="'Página '"
-          title-emphasis="Informativa"
-          subtitle="Sobre tu negocio o servicio"
-          price="<strong>$399</strong> USD"
-          :features="[
+            <div class="pricing">
+        <PricingCard v-reveal:up data-speed="slow" :title-before="'Página '" title-emphasis="Informativa"
+          subtitle="Sobre tu negocio o servicio" price="<strong>$399</strong> USD" :features="[
             'Diseño tradicional y estático',
             'Diseño responsive',
             'Optimización de carga',
@@ -17,19 +13,11 @@
             'Formulario de contacto',
             'Hosting y dominio',
             '30 días de garantía y mantención'
-          ]"
-          cta-text="Contratar ahora"
-          cta-href="#contact"
-          note="El precio incluye el primer año de hosting y dominio"
-        />
+          ]" cta-text="Contratar ahora" cta-href="#contact"
+          note="El precio incluye el primer año de hosting y dominio" />
 
-        <PricingCard
-          :highlight="true"
-          badge="Más contratado"
-          title="Landing Page"
-          subtitle="Web similar a esta"
-          price="<strong>$799</strong> USD"
-          :features="[
+        <PricingCard v-reveal:up.d200 data-speed="slow" :highlight="true" badge="Más contratado" title="Landing Page"
+          subtitle="Web similar a esta" price="<strong>$799</strong> USD" :features="[
             'Diseño único',
             'Animaciones',
             'Diseño responsive',
@@ -39,17 +27,11 @@
             'Formulario de contacto',
             'Hosting y dominio',
             '60 días de garantía y mantención'
-          ]"
-          cta-text="Contratar ahora"
-          cta-href="#contact"
-          note="El precio incluye el primer año de hosting y dominio"
-        />
+          ]" cta-text="Contratar ahora" cta-href="#contact"
+          note="El precio incluye el primer año de hosting y dominio" />
 
-        <PricingCard
-          title="Tienda Online"
-          subtitle="También llamado e-commerce"
-          price="<strong>$1.299</strong> USD"
-          :features="[
+        <PricingCard v-reveal:up.d400 data-speed="slow" title="Tienda Online" subtitle="También llamado e-commerce"
+          price="<strong>$1.299</strong> USD" :features="[
             'Diseño personalizado',
             'Diseño responsive',
             'Ingreso de 50 productos',
@@ -59,11 +41,8 @@
             'Formulario de contacto',
             'Hosting y dominio',
             '90 días de garantía y mantención'
-          ]"
-          cta-text="Contratar ahora"
-          cta-href="#contact"
-          note="El precio incluye el primer año de hosting y dominio"
-        />
+          ]" cta-text="Contratar ahora" cta-href="#contact"
+          note="El precio incluye el primer año de hosting y dominio" />
       </div>
     </BaseContainer>
   </section>

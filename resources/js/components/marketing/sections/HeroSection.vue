@@ -4,19 +4,19 @@
       <VantaGlobe />
     </div>
     <BaseContainer>
-      <div class="hero-card">
-        <h1>
+      <div class="hero-card" v-reveal:up>
+        <h1 v-reveal:up.d100>
           Transformo tus ideas en <span class="accent">sitios web que convierten</span>
         </h1>
-        <p class="sub">
+        <p class="sub" v-reveal:up.d180>
           Landing pages, tiendas online y páginas informativas rápidas y modernas. Diseño responsive,
           buena velocidad y SEO básico para que te encuentren y te contacten.
         </p>
-        <div class="cta">
+        <div class="cta" v-reveal:up.d260>
           <BaseButton href="#contact">Quiero mi sitio</BaseButton>
           <BaseButton href="#work" :ghost="true">Ver trabajos</BaseButton>
         </div>
-        <ul class="trust">
+        <ul class="trust" v-reveal:up.d340>
           <li>🚀 Entrega rápida</li>
           <li>📱 Diseño responsive</li>
           <li>🔎 SEO básico y analítica</li>

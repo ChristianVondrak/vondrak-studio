@@ -25,7 +25,6 @@ return new class extends Migration {
       $t->string('gclid',255)->nullable();
 
       // Consentimiento y meta
-      $t->boolean('consent')->default(false);
       $t->string('ip',45)->nullable();
       $t->string('user_agent',512)->nullable();
 

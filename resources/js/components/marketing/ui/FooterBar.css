@@ -14,7 +14,7 @@
 
 .links{ display:flex; gap:14px }
 .links a{ color:var(--white); text-decoration:none; opacity:.95 }
-.links a:hover{ color:var(--accent-2) }
+.links a:hover{ color:var(--accent) }
 
 .bottom{ display:flex; justify-content:space-between; align-items:center; gap:12px; border-top:1px dashed rgba(255,255,255,0.03); padding-top:14px }
 .muted{ color:var(--muted) }

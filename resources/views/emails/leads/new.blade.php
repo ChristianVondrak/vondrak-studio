@@ -20,7 +20,6 @@
   <li>Referrer: {{ $lead->referrer ?? '—' }}</li>
   <li>Landing URL: {{ $lead->landing_url ?? '—' }}</li>
   <li>GCLID: {{ $lead->gclid ?? '—' }}</li>
-  <li>Consentimiento: {{ $lead->consent ? '✅ Sí' : '❌ No' }}</li>
 </ul>
 
 <p><em>IP:</em> {{ $lead->ip }}<br>

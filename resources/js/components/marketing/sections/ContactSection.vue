@@ -2,22 +2,22 @@
   <section id="contact" class="section contact-section">
     <BaseContainer>
       <div class="contact-grid">
-        <div class="contact-intro">
-          <h2 class="section-title">Cuéntame sobre tu idea</h2>
-          <p class="lead">Completa el formulario y te responderé con una propuesta clara en menos de 24h (días hábiles).</p>
-          <ul class="benefits" aria-label="Beneficios incluidos">
+        <div class="contact-intro" v-reveal:up>
+          <h2 class="section-title" v-reveal:up.d80>Cuéntame sobre tu idea</h2>
+          <p class="lead" v-reveal:up.d140>Completa el formulario y te responderé con una propuesta clara en menos de 24h (días hábiles).</p>
+          <ul class="benefits" aria-label="Beneficios incluidos" v-reveal:up.d200>
             <li>✔ Respuesta en 24h</li>
             <li>✔ Propuesta clara y transparente</li>
             <li>✔ Sin spam ni suscripciones</li>
           </ul>
-          <div class="alt">
+          <div class="alt" v-reveal:up.d260>
             <a href="mailto:hello@vondrak.dev">hello@vondrak.dev</a>
             <span class="sep" aria-hidden="true">·</span>
             <a target="_blank" rel="noopener noreferrer" href="https://wa.me/00000000000">WhatsApp</a>
           </div>
         </div>
 
-        <form class="contact-form glass" @submit.prevent="handleSubmit" novalidate aria-describedby="contact-status" aria-live="polite">
+        <form class="contact-form glass" v-reveal:up.d140 @submit.prevent="handleSubmit" novalidate aria-describedby="contact-status" aria-live="polite">
           <!-- Nombre -->
           <label class="sr-only" for="name">Nombre</label>
           <input v-model="form.name" id="name" name="name" type="text"
@@ -30,7 +30,7 @@
 
           <!-- Servicio -->
           <select v-model="form.serviceType" name="serviceType" class="contact-select" required>
-            <option value="" disabled>Selecciona el tipo de servicio</option>
+            <option value="" disabled>Tipo de servicio</option>
             <option value="informativa">Página Informativa ($399 USD)</option>
             <option value="landing">Landing Page ($799 USD)</option>
             <option value="tienda">Tienda Online ($1,299 USD)</option>
@@ -38,7 +38,7 @@
 
           <!-- Presupuesto -->
           <select v-model="form.budget" name="budget" class="contact-select" required>
-            <option value="" disabled>¿Cuál es tu presupuesto estimado?</option>
+            <option value="" disabled>¿Presupuesto estimado?</option>
             <option value="menos-400">Menos de $400 USD</option>
             <option value="400-800">$400 - $800 USD</option>
             <option value="800-1500">$800 - $1,500 USD</option>
@@ -51,11 +51,7 @@
           <textarea v-model="form.message" name="message" rows="4"
                     placeholder="¿Qué necesitas? Cuéntame más detalles sobre tu proyecto..." required />
 
-          <!-- Consentimiento -->
-          <label class="consent">
-            <input type="checkbox" v-model="form.consent" />
-            Acepto ser contactado y que mis datos sean usados para responder a mi solicitud.
-          </label>
+          <!-- (consent removed) -->
 
           <!-- Honeypot -->
           <input v-model="form.company" name="company" type="text" tabindex="-1"
@@ -97,7 +93,7 @@ type Budget = 'menos-400'|'400-800'|'800-1500'|'1500-3000'|'3000-5000'|'mas-5000
 
 const form = ref({
   name:'', email:'', serviceType:'', budget:'' as Budget, message:'',
-  consent: false, company: '', // honeypot
+  company: '', // honeypot
 
   // tracking
   utm_source:'', utm_medium:'', utm_campaign:'', utm_term:'', utm_content:'',
@@ -145,7 +141,7 @@ async function handleSubmit() {
     // reset suave
     form.value = {
       name:'', email:'', serviceType:'', budget:'' as Budget, message:'',
-      consent:false, company:'',
+      company:'',
       utm_source:'', utm_medium:'', utm_campaign:'', utm_term:'', utm_content:'',
       referrer:'', landing_url:'', gclid:''
     }

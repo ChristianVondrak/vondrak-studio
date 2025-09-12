@@ -26,7 +26,6 @@ class LeadController extends Controller
     // enrich meta
     $data['ip'] = $request->ip();
     $data['user_agent'] = substr((string)$request->userAgent(), 0, 512);
-    $data['consent'] = (bool)($data['consent'] ?? false);
 
     $lead = Lead::create($data);
 

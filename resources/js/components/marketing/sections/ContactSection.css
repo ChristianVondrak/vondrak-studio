@@ -20,8 +20,6 @@
 .contact-form input::placeholder, .contact-form textarea::placeholder{ color:#cfcfe6bb }
 .contact-select{ cursor: pointer; font-size: .9rem }
 .contact-select option{ background: #0b1220; color: #fff }
-.consent{ grid-column: 1 / -1; display:flex; gap:10px; align-items:flex-start; color:var(--muted); font-size:.78rem; line-height:1.4 }
-.consent input{ margin-top:3px }
 
 /* Submit button enhancements */
 .submit-btn{ position:relative; font-weight:600; display:inline-flex; gap:8px; }

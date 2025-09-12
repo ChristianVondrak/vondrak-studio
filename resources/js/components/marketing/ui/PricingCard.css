@@ -73,3 +73,6 @@
 
 .plan__cta{ width:100%; margin-top:auto }
 .plan__note{ margin:10px 0 0; text-align:center; color:var(--muted, #cfd2ffb0); font-size:.8rem }
+
+.plan.reveal { transition: opacity .9s ease, transform .9s cubic-bezier(.22,.61,.36,1), box-shadow .18s ease, border-color .2s ease; }
+.plan.reveal[data-speed="slow"] { transition: opacity 2s ease, transform 2s cubic-bezier(.22,.61,.36,1), box-shadow .18s ease, border-color .2s ease; }
