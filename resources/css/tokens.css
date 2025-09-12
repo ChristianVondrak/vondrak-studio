@@ -3,7 +3,7 @@
   --glass: rgba(13, 20, 34, .55);
   --stroke: rgba(148, 163, 184, .22);
   --white: #e6f1ff;
-  --muted: #94a3b8;
+  --muted: #9fb0c8;
   --accent: #22d3ee;        /* cyan */
   --accent-2: #a78bfa;      /* soft purple */
   --accent-gradient: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);

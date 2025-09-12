@@ -1,0 +1,51 @@
+/* Grid layout */
+.contact-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: clamp(32px,4vw,60px); align-items:start }
+.contact-intro{ max-width:520px }
+.contact-intro .benefits{ list-style:none; margin:18px 0 26px; padding:0; display:grid; gap:6px; font-size:.95rem; color:var(--muted) }
+.contact-intro .benefits li{ display:flex; gap:6px; align-items:flex-start }
+
+/* Form card */
+.contact-form{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; padding: clamp(20px,2.8vw,32px); position:relative; overflow:hidden }
+.contact-form:before{ content:""; position:absolute; inset:0; background: radial-gradient(circle at 85% 15%, rgba(34,211,238,.18), transparent 60%); pointer-events:none }
+
+.contact-form textarea{ grid-column: 1 / -1; resize: vertical; min-height:130px }
+.contact-form input, .contact-form textarea, .contact-form select{
+  width:100%; padding:14px 14px; border-radius:12px; border:1px solid var(--stroke);
+  background: rgba(255,255,255,.04); color:#fff; outline:none; font: inherit; font-size:.95rem;
+  transition: border-color .18s ease, background .25s ease, box-shadow .25s;
+}
+.contact-form input:focus, .contact-form textarea:focus, .contact-form select:focus{
+  border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,211,238,.25); background: rgba(255,255,255,.07)
+}
+.contact-form input::placeholder, .contact-form textarea::placeholder{ color:#cfcfe6bb }
+.contact-select{ cursor: pointer; font-size: .9rem }
+.contact-select option{ background: #0b1220; color: #fff }
+.consent{ grid-column: 1 / -1; display:flex; gap:10px; align-items:flex-start; color:var(--muted); font-size:.78rem; line-height:1.4 }
+.consent input{ margin-top:3px }
+
+/* Submit button enhancements */
+.submit-btn{ position:relative; font-weight:600; display:inline-flex; gap:8px; }
+.submit-btn[disabled]{ opacity:.7; cursor: progress }
+.loader{ width:16px; height:16px; border:3px solid rgba(255,255,255,.3); border-top-color:#06131f; border-radius:50%; animation: spin .8s linear infinite }
+@keyframes spin{ to{ transform: rotate(360deg) } }
+
+/* Status messages */
+.status{ margin-top:18px; font-size:.9rem }
+.status.ok{ color:#8affc1 }
+.status.error{ color:#ff9aa2 }
+
+/* Alt contact */
+.alt{ color: var(--muted); font-size:.85rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+.alt a{ color:#fff; text-decoration:none; font-weight:500 }
+.alt a:hover{ color: var(--accent) }
+.alt .sep{ opacity:.4 }
+
+/* Honeypot */
+.hp{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; pointer-events:none }
+
+/* Accessibility */
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); border:0 }
+
+/* Responsive */
+@media (max-width: 1080px){ .contact-grid{ grid-template-columns: 1fr; } }
+@media (max-width: 780px){ .contact-form{ grid-template-columns: 1fr } }

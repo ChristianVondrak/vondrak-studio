@@ -1,0 +1,35 @@
+/* FooterBar component styles (scoped via SFC) */
+.footer{
+  border-top: 1px solid var(--stroke);
+  padding: 28px 0 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+}
+
+.footer-grid{ display:flex; justify-content:space-between; gap:20px; align-items:center; padding-bottom:18px }
+.brand{ display:flex; gap:12px; align-items:center }
+.logo{ width:56px; height:56px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:800; color:#06131f; background: var(--accent-gradient); box-shadow: 0 8px 24px rgba(34,211,238,.12); font-family: 'Poppins', Inter, system-ui, sans-serif; cursor: pointer }
+.logo:hover{ transform: translateY(-2px) scale(1.02); transition: transform .18s ease }
+.brand-name{ font-weight:700 }
+.tag{ font-size:0.9rem; color:var(--muted) }
+
+.links{ display:flex; gap:14px }
+.links a{ color:var(--white); text-decoration:none; opacity:.95 }
+.links a:hover{ color:var(--accent-2) }
+
+.bottom{ display:flex; justify-content:space-between; align-items:center; gap:12px; border-top:1px dashed rgba(255,255,255,0.03); padding-top:14px }
+.muted{ color:var(--muted) }
+.social{ display:flex; gap:12px; align-items:center }
+.social a{ color:var(--muted); text-decoration:none; display:inline-flex; align-items:center; justify-content:center }
+.social a.icon{ width:36px; height:36px; border-radius:8px; background: rgba(255,255,255,0.02); transition: transform .18s ease, box-shadow .18s ease, background .12s ease, color .12s ease }
+.social a.icon:hover{ 
+  background: var(--accent-gradient);
+  color: #06131f;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(34,211,238,.12);
+}
+
+@media (max-width: 700px){
+  .footer-grid{ flex-direction:column; align-items:flex-start }
+  .links{ order:2; width:100%; justify-content:flex-start; gap:12px; flex-wrap:wrap }
+  .bottom{ flex-direction:column; align-items:flex-start; gap:8px }
+}
