@@ -6,32 +6,83 @@
         <div class="cover"></div>
         <div class="hero-inner">
           <BaseContainer>
-            <div class="hero-head glass" role="banner" aria-label="Detalle de proyecto">
-              <div class="hero-actions">
-                <button class="btn action" @click="goBack" aria-label="Volver">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span class="label">Volver</span>
-                </button>
-                <button class="btn action" @click="shareOrCopy" aria-label="Compartir o copiar enlace">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M12 16V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M8 8l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span class="label">Compartir</span>
-                </button>
+            <div class="hero-content">
+              <div class="hero-head glass" role="banner" aria-label="Detalle de proyecto">
+                <div class="hero-actions">
+                  <button class="btn action" @click="goBack" aria-label="Volver">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="label">Volver</span>
+                  </button>
+                  <button class="btn action" @click="shareOrCopy" aria-label="Compartir o copiar enlace">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M12 16V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M8 8l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="label">Compartir</span>
+                  </button>
+                </div>
+                <div class="eyebrow">Caso de estudio</div>
+                <h1 class="title">
+                  {{ project.title.split(' ')[0] }}
+                  <span>{{ project.title.split(' ').slice(1).join(' ') }}</span>
+                </h1>
+                <p class="subtitle" v-if="project.excerpt">{{ project.excerpt }}</p>
+                <ul class="tags" v-if="project.tags?.length">
+                  <li v-for="t in project.tags" :key="t">{{ t }}</li>
+                </ul>
               </div>
-              <div class="eyebrow">Caso de estudio</div>
-              <h1 class="title">
-                {{ project.title.split(' ')[0] }}
-                <span>{{ project.title.split(' ').slice(1).join(' ') }}</span>
-              </h1>
-              <p class="subtitle" v-if="project.excerpt">{{ project.excerpt }}</p>
-              <ul class="tags" v-if="project.tags?.length">
-                <li v-for="t in project.tags" :key="t">{{ t }}</li>
-              </ul>
+
+              <!-- VALOR Y CREDIBILIDAD INMEDIATA -->
+              <div class="hero-results animate-section reveal-delay-4">
+                <!-- KPIs Compactos -->
+                <div class="results-kpis">
+                  <div v-for="(kpi, index) in project.kpis" :key="index" class="kpi-compact" 
+                       :class="[{ 'has-tooltip': kpi.tooltip }, `reveal-delay-${5 + index}`]"
+                       :title="kpi.tooltip">
+                    <div class="kpi-icon" v-html="getKpiIcon(kpi)"></div>
+                    <div class="kpi-data">
+                      <div class="kpi-value" :data-target="parseFloat(kpi.value)" data-suffix="">{{ kpi.value }}</div>
+                      <div class="kpi-label">{{ kpi.label }}</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Resumen Ejecutivo -->
+                <div class="executive-summary">
+                  <h3>¿Qué logramos?</h3>
+                  <p>{{ project.summary }}</p>
+                  <div class="social-proof">
+                    <div class="client-badge">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                      </svg>
+                      <span>{{ project.client }}</span>
+                    </div>
+                    <div class="industry-badge">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                      </svg>
+                      <span>{{ project.industry }}</span>
+                    </div>
+                  </div>
+                  
+                  <!-- CTA Estratégico -->
+                  <div class="hero-cta">
+                    <a href="/#contact" class="cta-subtle">
+                      <span>¿Necesitas resultados similares?</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17l9.2-9.2M17 17V7H7"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </BaseContainer>
         </div>
@@ -53,86 +104,125 @@
     <section class="section">
       <BaseContainer>
         <div class="grid">
-          <!-- MAIN: foco 100% en valor/impacto -->
+          <!-- MAIN: Conversion-optimized flow -->
           <article class="main">
-            <!-- KPIs arriba -->
-            <div class="kpis" v-if="project.kpis?.length" role="list" aria-label="Indicadores clave">
-              <div class="kpi" v-for="k in project.kpis" :key="k.label" role="listitem">
-                <div class="kpi-icon" aria-hidden="true">
-                  <svg v-if="getKpiIcon(k.label) === 'down'" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 7l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M7 17h10V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <svg v-else-if="getKpiIcon(k.label) === 'speed'" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 3a9 9 0 100 18 9 9 0 000-18z" stroke="currentColor" stroke-width="2"/>
-                    <path d="M12 12l4-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  </svg>
-                  <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 3v18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M7 8l5-5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
+            <!-- 1. STORY HOOK - Context sin redundancia -->
+            <div id="contexto" class="block block--context section-block animate-section reveal">
+              <!-- Section Header Consistente -->
+              <div class="section-header reveal-delay-1">
+                <div class="section-meta">
+                  <span class="section-tag">{{ project.industry }}</span>
+                  <span class="section-tag secondary">{{ project.timeline?.length ? `${project.timeline.length} semanas` : 'Proyecto ágil' }}</span>
                 </div>
-                <div class="kpi-value" :aria-label="k.label">{{ k.value }}</div>
-                <div class="kpi-label">{{ k.label }}</div>
+                <h2 class="section-title">El reto que resolvimos</h2>
+                <p class="section-subtitle">Contexto del problema y nuestro enfoque estratégico</p>
+              </div>
+              
+              <!-- Section Content -->
+              <div class="section-content">
+                <div class="story-content">
+                  <div class="challenge-summary reveal-delay-2">
+                    <h3>🚨 El Desafío</h3>
+                    <p>{{ project.problem }}</p>
+                  </div>
+                  <div class="solution-preview reveal-delay-3">
+                    <h3>💡 Nuestro Enfoque</h3>
+                    <p>{{ project.summary }}</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- Resumen ejecutivo -->
-            <div id="resumen" class="block block--summary section-block" v-if="project.summary">
-              <h2>Resumen</h2>
-              <p>{{ project.summary }}</p>
+            <!-- 2. TECHNICAL SOLUTION - Para developers -->
+            <div id="solucion" class="block block--solution section-block animate-section reveal">
+              <!-- Section Header Consistente -->
+              <div class="section-header reveal-delay-1">
+                <div class="section-meta">
+                  <span class="section-tag">{{ project.role }}</span>
+                  <span v-for="tech in project.stack.slice(0, 3)" :key="tech" class="section-tag secondary">{{ tech }}</span>
+                  <span v-if="project.stack.length > 3" class="section-tag secondary">+{{ project.stack.length - 3 }} más</span>
+                </div>
+                <h2 class="section-title">Cómo lo resolvimos</h2>
+                <p class="section-subtitle">Estrategia técnica y características implementadas</p>
+              </div>
+              
+              <!-- Section Content -->
+              <div class="section-content">
+                <div class="solution-grid">
+                  <div class="approach-list reveal-delay-2">
+                    <h3>Estrategia técnica</h3>
+                    <ul class="approach-items">
+                      <li v-for="(item, i) in project.solution" :key="i" class="approach-item">
+                        <div class="approach-icon">{{ i + 1 }}</div>
+                        <span>{{ item }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="key-features reveal-delay-3" v-if="project.features?.length">
+                    <h3>Características clave</h3>
+                    <div class="features-grid">
+                      <div v-for="(f, i) in project.features" :key="i" class="feature-card">
+                        <div class="feature-icon">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20,6 9,17 4,12"/>
+                          </svg>
+                        </div>
+                        <span>{{ f }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <!-- 1. Desafío -->
-            <div id="desafio" class="block block--challenge section-block">
-              <div class="block__head">
-                <h2>Desafío</h2>
+            <!-- 3. RESULTS VALIDATION - Proof vs claims -->  
+            <div id="resultados" class="block block--results section-block animate-section reveal">
+              <!-- Section Header Consistente -->
+              <div class="section-header reveal-delay-1">
+                <div class="section-meta">
+                  <span class="section-tag">Resultados</span>
+                  <span class="section-tag secondary">Métricas Reales</span>
+                  <span class="section-tag secondary">Impacto Medible</span>
+                </div>
+                <h2 class="section-title">Resultados conseguidos</h2>
+                <p class="section-subtitle">Métricas reales del impacto generado en el proyecto</p>
               </div>
-              <div class="block__body">
-                <p>{{ project.problem }}</p>
-              </div>
-            </div>
-
-            <!-- 2. Solución (layout alterno) -->
-            <div id="solucion" class="block block--solution section-block">
-              <div class="block__head">
-                <h2>Solución</h2>
-              </div>
-              <div class="block__body">
-                <ul class="list">
-                  <li v-for="(item, i) in project.solution" :key="i">{{ item }}</li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- 3. Resultados / Impacto (destacado) -->
-            <div id="resultados" class="block block--results section-block">
-              <div class="block__head">
-                <h2>Resultados</h2>
-              </div>
-              <div class="block__body">
-                <p class="results-copy">{{ project.outcomes }}</p>
-                <ul class="bullets" v-if="project.impactBullets?.length">
-                  <li v-for="(b, i) in project.impactBullets" :key="i">{{ b }}</li>
-                </ul>
+              
+              <!-- Section Content -->
+              <div class="section-content">
+                <div class="results-showcase">
+                  <div class="impact-narrative reveal-delay-2">
+                    <p class="results-copy">{{ project.outcomes }}</p>
+                  </div>
+                  <div class="impact-metrics reveal-delay-3" v-if="project.impactBullets?.length">
+                    <div v-for="(bullet, i) in project.impactBullets" :key="i" class="metric-highlight">
+                      <div class="metric-value">{{ bullet.split(' ')[0] }}</div>
+                      <div class="metric-label">{{ bullet.split(' ').slice(1).join(' ') }}</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- Características -->
-            <div id="caracteristicas" class="block section-block" v-if="project.features?.length">
-              <h2>Características clave</h2>
-              <ul class="list">
-                <li v-for="(f, i) in project.features" :key="i">{{ f }}</li>
-              </ul>
-            </div>
-
-            <!-- Galería -->
-    <div id="galeria" class="block section-block" v-if="displayGallery.length">
-              <h2>Galería</h2>
-              <div class="gallery">
+            <!-- 5. VISUAL EVIDENCE - Galería con contexto -->
+            <div id="galeria" class="block section-block animate-section reveal" v-if="displayGallery.length">
+              <!-- Section Header Consistente -->
+              <div class="section-header reveal-delay-1">
+                <div class="section-meta">
+                  <span class="section-tag">Visual</span>
+                  <span class="section-tag secondary">{{ displayGallery.length }} Capturas</span>
+                  <span class="section-tag secondary">UI/UX</span>
+                </div>
+                <h2 class="section-title">Evidencia visual</h2>
+                <p class="section-subtitle">Capturas del producto en funcionamiento</p>
+              </div>
+              
+              <!-- Section Content -->
+              <div class="section-content">
+                <div class="gallery">
                 <figure
-      v-for="(g, i) in displayGallery"
-      :key="g.src"
+                  v-for="(g, i) in displayGallery"
+                  :key="g.src"
                   :class="[{ 'span-2': (i % 5) === 0 }, { 'is-loading': !galleryLoaded[i] }]"
                 >
                   <button class="img-btn" @click="openLightbox(i)" :aria-label="`Abrir imagen ${i+1} en visor`">
@@ -140,36 +230,77 @@
                   </button>
                   <figcaption v-if="g.caption">{{ g.caption }}</figcaption>
                 </figure>
+                </div>
               </div>
             </div>
 
-            <!-- Testimonial -->
-            <div id="testimonial" class="testimonial section-block" v-if="project.testimonial">
-              <div class="testimonial-top">
-                <div class="testimonial-left">
+            <!-- 4. TESTIMONIAL - Validación social -->
+            <div id="testimonial" class="testimonial section-block reveal" v-if="project.testimonial">
+              <!-- Section Header Consistente -->
+              <div class="section-header reveal-delay-1">
+                <div class="section-meta">
+                  <span class="section-tag">Testimonial</span>
+                  <span class="section-tag secondary">{{ project.client }}</span>
+                  <span class="section-tag secondary">Validación</span>
+                </div>
+                <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+                <p class="section-subtitle">Experiencia directa del equipo que trabajó con nosotros</p>
+              </div>
+              
+              <!-- Section Content -->
+              <div class="section-content">
+                <div class="testimonial-card">
+                  <div class="testimonial-top reveal-delay-2">
+                    <div class="testimonial-left">
                   <div v-if="project.testimonial.avatar" class="avatar-wrap">
                     <img class="avatar" :src="project.testimonial.avatar" :alt="`Avatar de ${project.testimonial.name}`" />
                   </div>
-                  <div v-else class="avatar-placeholder" :style="avatarStyle(project.testimonial.name)" aria-hidden="true">{{ initials(project.testimonial.name) }}</div>
-                </div>
-                <div class="testimonial-info">
-                  <strong class="who-name">{{ project.testimonial.name }}</strong>
-                  <div class="who-role">{{ project.testimonial.role }}</div>
-                </div>
-              </div>
+                      <div v-else class="avatar-placeholder" :style="avatarStyle(project.testimonial.name)" aria-hidden="true">{{ initials(project.testimonial.name) }}</div>
+                    </div>
+                    <div class="testimonial-info">
+                      <strong class="who-name">{{ project.testimonial.name }}</strong>
+                      <div class="who-role">{{ project.testimonial.role }}</div>
+                    </div>
+                  </div>
               <div class="testimonial-body">
                 <blockquote class="quote">“{{ project.testimonial.quote }}”</blockquote>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- CTA principal -->
-            <div class="cta" role="region" aria-label="Llamada a la acción">
-              <div class="cta-copy">
-                <strong>Transformamos ideas en productos escalables.</strong>
-                <div class="muted">Cuéntanos tu reto y te proponemos un plan rápido y realista.</div>
-              </div>
-              <div class="cta-actions">
-                <a href="/#contact" class="btn cta primary" aria-label="Solicitar presupuesto">Solicitar presupuesto</a>
+            <!-- 6. ACTION ZONE - CTA optimizado -->
+            <div class="cta-zone section-block animate-section reveal" role="region" aria-label="Llamada a la acción">
+              <div class="cta-container">
+                <div class="cta-content">
+                  <div class="cta-header">
+                    <h2>¿Listo para resultados similares?</h2>
+                    <p class="cta-subtitle">Transformamos ideas en productos escalables con métricas comprobadas</p>
+                  </div>
+                  <div class="cta-stats">
+                    <div class="stat-item">
+                      <div class="stat-value">50+</div>
+                      <div class="stat-label">Proyectos entregados</div>
+                    </div>
+                    <div class="stat-item">
+                      <div class="stat-value">98%</div>
+                      <div class="stat-label">Clientes satisfechos</div>
+                    </div>
+                    <div class="stat-item">
+                      <div class="stat-value">2-8</div>
+                      <div class="stat-label">Semanas promedio</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="cta-actions">
+                  <a href="/#contact" class="btn cta primary" aria-label="Solicitar presupuesto">
+                    <span>Solicitar presupuesto</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M7 17l9.2-9.2M17 17V7H7"/>
+                    </svg>
+                  </a>
+                  <a href="/#projects" class="btn cta secondary">Ver más casos</a>
+                </div>
               </div>
             </div>
           </article>
@@ -222,6 +353,22 @@
       </BaseContainer>
     </section>
   </DefaultLayout>
+  
+  <!-- STICKY CTA -->
+  <Transition name="sticky-cta">
+    <div v-if="showStickyCTA" class="sticky-cta" role="banner" aria-label="Llamada a la acción flotante">
+      <BaseContainer>
+        <div class="sticky-cta-inner">
+          <div class="sticky-cta-text">
+            <strong>{{ project.title }}</strong>
+            <span>Solicita tu presupuesto personalizado</span>
+          </div>
+          <a href="/#contact" class="btn sticky-primary">Solicitar presupuesto</a>
+        </div>
+      </BaseContainer>
+    </div>
+  </Transition>
+
   <!-- LIGHTBOX accesible -->
   <div v-if="isLightboxOpen && displayGallery.length" class="lightbox" role="dialog" aria-modal="true" aria-label="Visor de imágenes" @keydown.esc="closeLightbox" tabindex="-1" ref="lightboxRef">
     <button class="lightbox__overlay" @click="closeLightbox" aria-label="Cerrar visor"></button>
@@ -252,7 +399,7 @@ import { onMounted, onBeforeUnmount, ref, nextTick, computed } from 'vue'
  */
 import coverOrion from '@/assets/projects/orion/image.png'
 
-type KPI = { label: string; value: string }
+type KPI = { label: string; value: string; tooltip?: string }
 type TimelineItem = { label: string; when: string }
 type GalleryItem = { src: string; caption?: string }
 type Testimonial = { quote: string; name: string; role: string; avatar?: string }
@@ -307,9 +454,9 @@ const project: Project = {
 
   // KPIs
   kpis: [
-    { label: 'Tiempo de ciclo', value: '−42%' },
-    { label: 'LCP', value: '1.4s' },
-    { label: 'Adopción', value: '+80%' },
+    { label: 'Tiempo de ciclo', value: '−42%', tooltip: 'Reducción del tiempo promedio entre inicio y finalización de procesos críticos' },
+    { label: 'LCP', value: '1.4s', tooltip: 'Largest Contentful Paint - Tiempo de carga del elemento más grande visible' },
+    { label: 'Adopción', value: '+80%', tooltip: 'Incremento en la tasa de adopción interna de la plataforma por parte de los equipos' },
   ],
 
   // ASIDE
@@ -341,15 +488,13 @@ const project: Project = {
 
 // --- Navegación anclada y scrollspy ---
 const sectionOrder = [
-  { id: 'resumen', label: 'Resumen' },
-  { id: 'desafio', label: 'Desafío' },
+  { id: 'contexto', label: 'Contexto' },
   { id: 'solucion', label: 'Solución' },
   { id: 'resultados', label: 'Resultados' },
-  { id: 'caracteristicas', label: 'Características' },
-  { id: 'galeria', label: 'Galería' },
   { id: 'testimonial', label: 'Testimonial' },
+  { id: 'galeria', label: 'Galería' },
 ]
-const activeSection = ref<string>('resumen')
+const activeSection = ref<string>('contexto')
 let observer: IntersectionObserver | null = null
 
 const createObserver = () => {
@@ -374,6 +519,9 @@ const scrollToSection = (id: string) => {
 
 onMounted(() => {
   createObserver()
+  createKpiObserver()
+  createStickyObserver()
+  initializeScrollAnimations()
   // Si llega con hash, desplazamos suave
   if (location.hash) {
     const id = location.hash.replace('#', '')
@@ -385,6 +533,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (observer) observer.disconnect()
+  if (stickyObserver.value) stickyObserver.value.disconnect()
   window.removeEventListener('keydown', handleKeyNav)
 })
 
@@ -423,13 +572,64 @@ const tempToast = (msg: string) => {
   }, 1600)
 }
 
-// --- KPIs: icon mapping ---
-const getKpiIcon = (label: string): 'down' | 'speed' | 'up' => {
-  const l = label.toLowerCase()
-  if (l.includes('tiempo') || l.includes('ciclo')) return 'down'
-  if (l.includes('lcp') || l.includes('performance') || l.includes('core web vitals')) return 'speed'
-  return 'up'
+// --- KPIs: icon mapping & counters ---
+const getKpiIcon = (kpi: KPI): string => {
+  const l = kpi.label.toLowerCase()
+  if (l.includes('tiempo') || l.includes('ciclo')) {
+    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M7 13l3 3 7-7" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2L8 6l4 4 4-4-4-4z" fill="#22d3ee" opacity="0.2"/></svg>`
+  }
+  if (l.includes('lcp') || l.includes('performance') || l.includes('core web vitals')) {
+    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#22d3ee" stroke-width="2"/><path d="M12 6v6l4 2" stroke="#22d3ee" stroke-width="2" stroke-linecap="round"/></svg>`
+  }
+  return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#22d3ee"/></svg>`
 }
+
+// Animated counters para KPIs del hero
+const kpiCounters = ref<Record<string, number>>({})
+const kpiAnimated = ref<Record<string, boolean>>({})
+
+const animateCounter = (target: number, key: string) => {
+  const duration = 1500
+  const start = performance.now()
+  const isNegative = target < 0
+  const absTarget = Math.abs(target)
+  
+  const animate = (currentTime: number) => {
+    const elapsed = currentTime - start
+    const progress = Math.min(elapsed / duration, 1)
+    const easeOut = 1 - Math.pow(1 - progress, 3)
+    const current = Math.floor(absTarget * easeOut)
+    kpiCounters.value[key] = isNegative ? -current : current
+    
+    if (progress < 1) requestAnimationFrame(animate)
+  }
+  requestAnimationFrame(animate)
+}
+
+const createKpiObserver = () => {
+  const options = { root: null, rootMargin: '0px', threshold: 0.3 }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        project.kpis.forEach((kpi) => {
+          if (!kpiAnimated.value[kpi.label]) {
+            const numValue = parseInt(kpi.value.replace(/[^\d-]/g, ''))
+            if (!isNaN(numValue)) {
+              animateCounter(numValue, kpi.label)
+              kpiAnimated.value[kpi.label] = true
+            }
+          }
+        })
+        observer.disconnect()
+      }
+    })
+  }, options)
+  
+  const kpiContainer = document.querySelector('.kpis')
+  if (kpiContainer) observer.observe(kpiContainer)
+}
+
+
 
 // --- Galería: lightbox + skeleton ---
 const isLightboxOpen = ref(false)
@@ -491,6 +691,53 @@ const handleKeyNav = (e: KeyboardEvent) => {
   if (e.key === 'Escape') closeLightbox()
 }
 
+// --- Sticky CTA ---
+const showStickyCTA = ref(false)
+const stickyObserver = ref<IntersectionObserver | null>(null)
+
+const createStickyObserver = () => {
+  const options = { root: null, rootMargin: '0px', threshold: 0 }
+  stickyObserver.value = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      // Show sticky CTA when main CTA is out of view
+      showStickyCTA.value = !entry.isIntersecting
+    })
+  }, options)
+  
+  const mainCTA = document.querySelector('.cta')
+  if (mainCTA) stickyObserver.value.observe(mainCTA)
+}
+
+// --- Scroll Animations ---
+const initializeScrollAnimations = () => {
+  const animationObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Delay para que la animación sea más apreciable
+          setTimeout(() => {
+            entry.target.classList.add('animate-in')
+          }, 150)
+        }
+      })
+    },
+    { 
+      threshold: 0.2,  // Requiere más visibilidad antes de animar
+      rootMargin: '0px 0px -100px 0px'  // Más margen para activar más tarde
+    }
+  )
+
+  // Observar secciones principales con delay escalonado
+  const sections = document.querySelectorAll('.block, .testimonial, .timeline, .gallery, .hero-results')
+  sections.forEach((section, index) => {
+    section.classList.add('animate-section')
+    // Delay escalonado para efecto cascade más pronunciado
+    setTimeout(() => {
+      animationObserver.observe(section)
+    }, index * 200)
+  })
+}
+
 // --- Testimonial helpers ---
 const initials = (name = '') => {
   const parts = name.split(' ').filter(Boolean)
@@ -512,7 +759,7 @@ const avatarStyle = (name = '') => {
   position:relative; color:#fff;
 }
 .cover-wrap{
-  position:relative; min-height: 62vh; isolation:isolate;
+  position:relative; min-height: 90vh; isolation:isolate;
   background:
     radial-gradient(1200px 60% at 50% 10%, rgba(34,211,238,.22), transparent 60%),
     radial-gradient(800px 40% at 20% 0%, rgba(167,139,250,.18), transparent 60%);
@@ -520,14 +767,29 @@ const avatarStyle = (name = '') => {
 .cover{
   position:absolute; inset:0;
   background:
-    linear-gradient(180deg, rgba(11,18,32,0) 0%, rgba(11,18,32,.72) 70%, rgba(11,18,32,1) 100%),
+    linear-gradient(180deg, rgba(11,18,32,0) 0%, rgba(11,18,32,.65) 60%, rgba(11,18,32,.9) 100%),
     var(--cover) center/cover no-repeat;
   filter: saturate(108%) contrast(106%);
   z-index:-1;
 }
-.hero-inner{ display:grid; align-items:end; min-height: inherit; padding-top: 72px; }
+.hero-inner{ 
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  min-height: inherit; padding: 32px 0;
+}
+.hero-content{
+  display:grid; 
+  grid-template-areas: 
+    "header header"
+    "results results";
+  grid-template-rows: auto 1fr;
+  gap: 32px; 
+  width: 100%; max-width: 1100px;
+  min-height: 70vh; /* Asegurar uso del espacio vertical */
+}
 .hero-head{
-  padding: clamp(20px, 4vw, 34px);
+  grid-area: header;
+  padding: clamp(20px, 4vw, 32px);
+  text-align: center; /* Centrar para mayor impacto */
 }
 .hero-head.glass{
   background: rgba(8,12,24,.34);
@@ -536,19 +798,48 @@ const avatarStyle = (name = '') => {
   backdrop-filter: blur(10px) saturate(130%);
   box-shadow: 0 10px 40px rgba(0,0,0,.28);
 }
-.hero-actions{ display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap }
+.hero-actions{ display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap }
 .btn.action{
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  height:38px; padding:0 12px; border-radius:12px; color:#e9ecff; background: rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.16); cursor:pointer; font-weight:600; font-size:.92rem;
+  height:40px; padding:0 16px; border-radius:12px; color:#e9ecff; background: rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18); cursor:pointer; font-weight:600; font-size:.92rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .btn.action .label{ line-height:1; }
-.btn.action:hover{ color:#0b1220; background: linear-gradient(90deg, #22d3ee, #a78bfa); box-shadow: 0 8px 24px rgba(34,211,238,.25) }
+.btn.action:hover{ 
+  color:#0b1220; background: linear-gradient(90deg, #22d3ee, #a78bfa); 
+  box-shadow: 0 8px 24px rgba(34,211,238,.3); transform: translateY(-2px);
+}
 .btn.action:focus-visible{ outline:2px solid #22d3ee; outline-offset:2px }
-.eyebrow{ color: var(--muted, #cfd2ffb0); font-size:.95rem; letter-spacing:.4px; text-transform:uppercase }
-.title{ margin:6px 0 8px; font-size: clamp(32px, 4.8vw, 60px); line-height:1.04; color:#fff }
-.title span{ color: var(--accent, #22d3ee) }
-.subtitle{ color: var(--muted, #cfd2ffb0); max-width: 820px }
+.eyebrow{ 
+  color: var(--accent); 
+  font-size:.9rem; 
+  letter-spacing:.6px; 
+  text-transform:uppercase; 
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.title{ 
+  margin:0 0 16px; 
+  font-size: clamp(28px, 4.2vw, 48px); 
+  line-height:1.1; 
+  color: var(--foreground);
+  text-shadow: 0 2px 4px rgba(0,0,0,.3);
+}
+.title span{ 
+  color: var(--accent); 
+  background: var(--accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.subtitle{ 
+  color: var(--foreground-muted); 
+  max-width: 600px; 
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin: 0 auto;
+}
 .tags{ display:flex; gap:8px; list-style:none; padding:0; margin:14px 0 0 }
 .tags li{
   border:1px solid var(--stroke, rgba(255,255,255,.15));
@@ -556,20 +847,522 @@ const avatarStyle = (name = '') => {
   background: rgba(255,255,255,.06);
 }
 
+/* Hero Results Section - Con tu estética */
+.hero-results{
+  grid-area: results;
+  display: grid; 
+  grid-template-columns: auto 1fr; 
+  gap: 32px; 
+  align-items: start;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 32px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(34, 211, 238, .15);
+}
+
+/* KPIs Compactos - Perfectamente alineados */
+.results-kpis{
+  display: flex; 
+  flex-direction: column; 
+  gap: 16px;
+  min-width: 160px;
+}
+.kpi-compact{
+  display: flex; 
+  align-items: center; 
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 68px; /* Altura consistente */
+}
+.kpi-compact:hover{
+  background: rgba(34,211,238,.08);
+  border-color: var(--accent);
+  transform: translateX(6px);
+  box-shadow: 0 4px 20px rgba(34, 211, 238, .2);
+}
+.kpi-compact .kpi-icon{
+  color: var(--accent);
+  flex-shrink: 0;
+  width: 24px; /* Ancho consistente */
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.kpi-data{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.kpi-compact .kpi-value{
+  font-size: 1.5rem; 
+  font-weight: 800; 
+  color: var(--accent);
+  line-height: 1.1; 
+  margin: 0;
+}
+.kpi-compact .kpi-label{
+  font-size: 0.8rem; 
+  color: var(--muted); 
+  text-transform: uppercase; 
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+/* Executive Summary - Convierte */
+.executive-summary{
+  display: flex; 
+  flex-direction: column; 
+  gap: 16px;
+}
+.executive-summary h3{
+  margin: 0; 
+  font-size: 1.2rem; 
+  color: #fff; 
+  font-weight: 600;
+  border-bottom: 2px solid rgba(34,211,238,.3);
+  padding-bottom: 8px;
+}
+.executive-summary p{
+  margin: 0; 
+  font-size: 1rem; 
+  color: #e2e8f0; 
+  line-height: 1.6;
+  max-width: 500px;
+}
+.social-proof{
+  display: flex; 
+  gap: 16px; 
+  flex-wrap: wrap;
+}
+.client-badge, .industry-badge{
+  display: flex; 
+  align-items: center; 
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(167,139,250,.1);
+  border: 1px solid rgba(167,139,250,.2);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #c4b5fd;
+  font-weight: 500;
+}
+.client-badge svg, .industry-badge svg{
+  opacity: 0.7;
+}
+
+/* CTA Estratégico Hero */
+.hero-cta{
+  margin-top: 8px;
+}
+.cta-subtle{
+  display: inline-flex; 
+  align-items: center; 
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, rgba(34,211,238,.12), rgba(167,139,250,.08));
+  border: 1px solid rgba(34,211,238,.25);
+  border-radius: 12px;
+  color: #22d3ee;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(4px);
+}
+.cta-subtle:hover{
+  background: linear-gradient(135deg, rgba(34,211,238,.18), rgba(167,139,250,.12));
+  border-color: rgba(34,211,238,.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34,211,238,.2);
+}
+.cta-subtle svg{
+  transition: transform 0.3s ease;
+}
+.cta-subtle:hover svg{
+  transform: translate(2px, -2px);
+}
+
+/* === NUEVA ESTRUCTURA DE SECCIONES === */
+
+/* Story Section - Contexto con tu estética */
+.block--context{
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 32px;
+  transition: all 0.4s ease;
+}
+.block--context:hover{
+  background: rgba(34,211,238,.04);
+  border-color: var(--accent);
+}
+.story-header{
+  margin-bottom: 24px;
+}
+.story-meta{
+  display: flex; gap: 16px; margin-bottom: 12px;
+}
+.project-type, .timeline{
+  padding: 6px 14px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+.story-content{
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+}
+.challenge-summary, .solution-preview{
+  padding: 20px;
+  background: var(--glass);
+  border-radius: var(--radius);
+  border: 1px solid var(--stroke);
+  transition: all 0.3s ease;
+}
+.challenge-summary{
+  border-left: 3px solid var(--destructive);
+}
+.challenge-summary:hover{
+  border-left-color: var(--destructive);
+  background: rgba(239, 68, 68, .04);
+}
+.solution-preview{
+  border-left: 3px solid var(--accent);
+}
+.solution-preview:hover{
+  border-left-color: var(--accent);
+  background: rgba(34,211,238,.04);
+}
+.solution-preview h3{
+  margin: 0 0 12px; font-size: 1.1rem; color: var(--accent);
+}
+
+/* Solution Section - Técnica con tu estética */
+.solution-header{
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
+}
+.tech-stack{
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.tech-badge{
+  padding: 6px 12px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.tech-badge:hover{
+  background: rgba(34,211,238,.08);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+.solution-grid{
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+}
+.approach-items{
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.approach-item{
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 16px;
+  background: var(--glass);
+  border-radius: var(--radius);
+  border: 1px solid var(--stroke);
+  transition: all 0.3s ease;
+}
+.approach-item:hover{
+  background: rgba(34,211,238,.04);
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+.approach-icon{
+  width: 28px; height: 28px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--background); font-weight: 700; font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.features-grid{
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.feature-card{
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px;
+  background: var(--glass);
+  border-radius: var(--radius);
+  border: 1px solid var(--stroke);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+.feature-card:hover{
+  background: rgba(34,211,238,.04);
+  border-color: var(--accent);
+}
+.feature-icon{
+  color: var(--accent); flex-shrink: 0;
+}
+
+/* Results Section - Showcase con tu estética */
+.results-header{
+  text-align: center; margin-bottom: 32px;
+}
+.results-subtitle{
+  margin: 8px 0 0; color: var(--muted); font-size: 1rem;
+}
+.results-showcase{
+  display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center;
+}
+.impact-narrative{
+  font-size: 1.1rem; line-height: 1.6; color: var(--foreground-muted);
+}
+.impact-metrics{
+  display: flex; flex-direction: column; gap: 16px; min-width: 200px;
+}
+.metric-highlight{
+  padding: 16px 20px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.metric-highlight:hover{
+  background: rgba(34,211,238,.08);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(34, 211, 238, .15);
+}
+.metric-value{
+  font-size: 1.8rem; font-weight: 900; color: var(--accent); line-height: 1;
+}
+.metric-label{
+  font-size: 0.85rem; color: var(--muted); margin-top: 4px;
+  text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;
+}
+
+/* Social Proof - Testimonial con tu estética */
+.social-proof-header{
+  text-align: center; margin-bottom: 32px;
+}
+.proof-subtitle{
+  margin: 8px 0 0; color: var(--muted); font-size: 1rem;
+}
+.testimonial-card{
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 32px;
+  position: relative;
+  transition: all 0.4s ease;
+}
+.testimonial-card:hover{
+  background: rgba(34,211,238,.04);
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(34, 211, 238, .15);
+}
+.testimonial-content{
+  margin-bottom: 24px; position: relative;
+}
+.quote-mark{
+  position: absolute; top: -10px; left: -10px;
+  font-size: 4rem; color: var(--accent);
+  font-family: serif; line-height: 1; opacity: 0.4;
+}
+.quote{
+  font-size: 1.2rem; line-height: 1.6; color: var(--foreground);
+  font-style: italic; margin: 0; padding-left: 20px;
+}
+.testimonial-author{
+  display: flex; align-items: center; gap: 16px;
+}
+.author-avatar .avatar, .author-avatar .avatar-placeholder{
+  width: 56px; height: 56px;
+  border-radius: var(--radius);
+  border: 2px solid var(--stroke);
+}
+.author-name{
+  color: var(--foreground); font-size: 1.1rem; font-weight: 600;
+}
+.author-role{
+  color: var(--muted); font-size: 0.9rem; margin-top: 2px;
+}
+
+/* Gallery Header */
+.gallery-header{
+  text-align: center; margin-bottom: 32px;
+}
+.gallery-subtitle{
+  margin: 8px 0 0; color: var(--muted); font-size: 1rem;
+}
+
+/* CTA Zone - Conversion Optimizada con tu estética */
+.cta-zone{
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 40px;
+  margin: 48px 0;
+  text-align: center;
+  transition: all 0.4s ease;
+}
+.cta-zone:hover{
+  background: rgba(34,211,238,.04);
+  border-color: var(--accent);
+  box-shadow: 0 12px 32px rgba(34, 211, 238, .1);
+}
+.cta-container{
+  max-width: 800px; margin: 0 auto;
+}
+.cta-header h2{
+  margin: 0 0 12px; font-size: 2rem; color: var(--foreground);
+}
+.cta-subtitle{
+  color: var(--muted); font-size: 1.1rem; margin: 0 0 32px;
+}
+.cta-stats{
+  display: flex; justify-content: center; gap: 48px; margin-bottom: 32px;
+}
+.stat-item{
+  text-align: center;
+}
+.stat-value{
+  font-size: 2.2rem; font-weight: 900; color: var(--accent); line-height: 1;
+}
+.stat-label{
+  font-size: 0.9rem; color: var(--muted); margin-top: 4px;
+  text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;
+}
+.cta-actions{
+  display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+}
+.btn.cta{
+  padding: 16px 32px; font-size: 1.1rem; font-weight: 600;
+  border-radius: var(--radius); text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn.cta.primary{
+  background: linear-gradient(135deg, #22d3ee, #a78bfa);
+  color: #0b1220; box-shadow: 0 4px 16px rgba(34,211,238,.3);
+}
+.btn.cta.primary:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(34,211,238,.4);
+}
+.btn.cta.secondary{
+  background: rgba(255,255,255,.08); color: #fff;
+  border: 1px solid rgba(255,255,255,.2);
+}
+.btn.cta.secondary:hover{
+  background: rgba(255,255,255,.12);
+  transform: translateY(-1px);
+}
+
+/* === ESTILOS ESTANDARIZADOS PARA TODAS LAS SECCIONES === */
+/* Section Header - Patrón consistente */
+.section-header{
+  margin-bottom: 32px;
+  text-align: center;
+}
+.section-meta{
+  display: flex; 
+  gap: 8px; 
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.section-tag{
+  padding: 6px 14px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+.section-tag.secondary{
+  color: var(--muted);
+  background: rgba(255,255,255,.02);
+}
+.section-tag:hover{
+  background: rgba(34,211,238,.08);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+.section-title{
+  margin: 0 0 12px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--foreground);
+  text-align: center;
+}
+.section-subtitle{
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--muted);
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Section Content - Contenedor estándar (sin estilos base) */
+
+/* Mejorar testimonial card */
+.testimonial-card{
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 32px;
+  transition: all 0.4s ease;
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.testimonial-card:hover{
+  background: rgba(34,211,238,.04);
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(34, 211, 238, .15);
+}
+
 /* ------ NAV SECCIONES ------ */
 .section-nav{
   position: sticky; top: 0; z-index: 20;
-  background: linear-gradient(180deg, rgba(11,18,32,.86), rgba(11,18,32,.72));
-  border-bottom: 1px solid rgba(255,255,255,.08);
-  backdrop-filter: blur(6px);
+  background: linear-gradient(180deg, rgba(11,18,32,.90), rgba(11,18,32,.80));
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(8px);
 }
-.section-nav ul{ display:flex; flex-wrap:wrap; gap:8px; padding:10px 0; margin:0; list-style:none }
+.section-nav ul{ display:flex; flex-wrap:wrap; gap:8px; padding:12px 0; margin:0; list-style:none }
 .section-nav a{
-  display:inline-block; padding:8px 12px; border-radius:999px; color:#cfd2ff; text-decoration:none; font-size:.92rem;
-  border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.04);
+  display:inline-block; padding:8px 16px; border-radius:24px; color:#cfd2ff; text-decoration:none; font-size:.92rem;
+  border:1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.05);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.section-nav a:hover{ color:#0b1220; background: linear-gradient(90deg, #22d3ee, #a78bfa) }
-.section-nav a.active{ color:#0b1220; font-weight:700; background: linear-gradient(90deg, #22d3ee, #a78bfa); border-color: transparent }
+.section-nav a:hover{ color:#0b1220; background: linear-gradient(90deg, #22d3ee, #a78bfa); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(34,211,238,.2); }
+.section-nav a.active{ color:#0b1220; font-weight:600; background: linear-gradient(90deg, #22d3ee, #a78bfa); border-color: transparent; box-shadow: 0 2px 8px rgba(34,211,238,.3); }
 
 /* ------ LAYOUT ------ */
 .grid{
@@ -580,10 +1373,16 @@ const avatarStyle = (name = '') => {
 
 /* ------ CARDS & ELEMENTS ------ */
 .card{
-  background: var(--glass, rgba(255,255,255,.05));
-  border:1px solid var(--stroke, rgba(255,255,255,.15));
-  border-radius: 14px; padding:14px;
-  box-shadow: 0 10px 40px rgba(0,0,0,.25);
+  background: var(--glass, rgba(255,255,255,.06));
+  border:1px solid var(--stroke, rgba(255,255,255,.16));
+  border-radius: 16px; padding:16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card:hover{
+  border-color: rgba(255,255,255,.24);
+  box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  transform: translateY(-2px);
 }
 .card h3{ margin:6px 0 8px; font-size:1.05rem; color:#fff }
 .quick-nav ul{ list-style:none; padding:0; margin:0; display:grid; gap:6px }
@@ -592,18 +1391,40 @@ const avatarStyle = (name = '') => {
 
 /* KPIs */
 .kpis{
-  display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-bottom: 16px;
+  display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom: 24px;
 }
 .kpi{
-  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
   border:1px solid var(--stroke, rgba(255,255,255,.16));
-  border-radius: 12px; padding:16px;
+  border-radius: 16px; padding:20px;
   text-align:center;
-  box-shadow: 0 10px 34px rgba(0,0,0,.2);
+  box-shadow: 0 12px 40px rgba(0,0,0,.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: help;
 }
-.kpi-icon{ width:28px; height:28px; margin: 0 auto 6px; color:#22d3ee }
-.kpi-value{ font-size:1.7rem; font-weight:800; color:#fff }
-.kpi-label{ color: var(--muted, #cfd2ffb0); font-size:.9rem }
+.kpi:hover{
+  transform: translateY(-4px);
+  border-color: rgba(34,211,238,.35);
+  box-shadow: 0 20px 60px rgba(34,211,238,.12);
+}
+.kpi-icon{ width:32px; height:32px; margin: 0 auto 8px; color:#22d3ee; transition: transform 0.3s ease }
+.kpi:hover .kpi-icon{ transform: scale(1.1) }
+.kpi-value{ font-size:1.8rem; font-weight:800; color:#fff; transition: color 0.3s ease }
+.kpi-value.animated{ font-variant-numeric: tabular-nums }
+.kpi-label{ color: var(--muted, #cfd2ffb0); font-size:.95rem; margin-top:4px }
+.kpi-tooltip{
+  position: absolute; bottom: -44px; left: 50%; transform: translateX(-50%);
+  background: rgba(11,18,32,.95); color: #e9ecff; padding: 8px 12px; border-radius: 8px;
+  font-size: .85rem; white-space: nowrap; max-width: 280px; text-align: left;
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  z-index: 10;
+}
+.kpi-tooltip::before{
+  content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+  border: 6px solid transparent; border-bottom-color: rgba(11,18,32,.95);
+}
 
 /* BLOQUES (ritmo visual) */
 .block{
@@ -772,10 +1593,186 @@ const avatarStyle = (name = '') => {
   .lightbox__nav.prev{ left:6px } .lightbox__nav.next{ right:6px }
   .lightbox__close{ top:8px; right:8px }
 }
+/* Responsive Hero - UX Optimizado */
+@media (max-width: 900px){
+  .hero-results{
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+  .results-kpis{
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: auto;
+  }
+  .kpi-compact{
+    flex: 1;
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 900px){
+  .story-content, .solution-grid, .results-showcase{
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .features-grid{
+    grid-template-columns: 1fr;
+  }
+  .cta-stats{
+    gap: 24px;
+  }
+}
+
 @media (max-width: 700px){
+  .cover-wrap{
+    min-height: 100vh;
+  }
+  .hero-inner{
+    padding: 16px 0;
+  }
+  .hero-content{
+    gap: 20px;
+    min-height: 60vh;
+  }
+  .results-kpis{
+    flex-direction: column;
+    gap: 12px;
+  }
+  .kpi-compact{
+    flex-direction: row;
+    text-align: left;
+  }
+  .executive-summary h3{
+    font-size: 1.1rem;
+  }
+  .executive-summary p{
+    font-size: 0.95rem;
+  }
+  
+  /* Nuevas secciones responsive */
+  .block--context{
+    padding: 24px;
+  }
+  .story-meta{
+    flex-direction: column;
+    gap: 8px;
+  }
+  .solution-header{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .approach-items{
+    gap: 12px;
+  }
+  .approach-item{
+    padding: 12px;
+  }
+  .testimonial-card{
+    padding: 24px;
+  }
+  .quote{
+    font-size: 1.1rem;
+  }
+  .cta-zone{
+    padding: 32px 20px;
+    margin: 32px 0;
+  }
+  .cta-header h2{
+    font-size: 1.5rem;
+  }
+  .cta-stats{
+    flex-direction: column;
+    gap: 16px;
+  }
+  .cta-actions{
+    flex-direction: column;
+    align-items: center;
+  }
+  .btn.cta{
+    width: 100%;
+    max-width: 280px;
+  }
   .kpis{ grid-template-columns:1fr }
   .gallery{ grid-template-columns: repeat(2, 1fr) }
   .gallery figure, .gallery figure.span-2{ grid-column: span 2 }
+}
+
+/* Sticky CTA */
+.sticky-cta{
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+  background: linear-gradient(90deg, rgba(11,18,32,.95), rgba(11,18,32,.98));
+  border-top: 1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(12px) saturate(120%);
+  box-shadow: 0 -8px 32px rgba(0,0,0,.4);
+}
+.sticky-cta-inner{
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0;
+}
+.sticky-cta-text strong{ display: block; color: #fff; font-size: .95rem; font-weight: 700 }
+.sticky-cta-text span{ color: var(--muted, #cfd2ffb0); font-size: .9rem }
+.btn.sticky-primary{
+  padding: 10px 16px; border-radius: 10px; background: linear-gradient(90deg, #22d3ee, #a78bfa);
+  color: #0b1220; font-weight: 700; text-decoration: none; white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn.sticky-primary:hover{ transform: translateY(-2px); box-shadow: 0 8px 24px rgba(34,211,238,.25) }
+
+/* Sticky CTA animations */
+.sticky-cta-enter-active, .sticky-cta-leave-active{ transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) }
+.sticky-cta-enter-from{ transform: translateY(100%); opacity: 0 }
+.sticky-cta-leave-to{ transform: translateY(100%); opacity: 0 }
+
+@media (max-width: 700px){
+  .sticky-cta-inner{ flex-direction: column; gap: 8px; text-align: center }
+  .btn.sticky-primary{ width: 100% }
+}
+
+/* Scroll-triggered animations - Más dramáticas */
+.animate-section {
+  opacity: 0;
+  transform: translateY(48px) scale(0.95);
+  filter: blur(2px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-section.animate-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0px);
+}
+
+/* Hero Results animation override */
+.hero-results.animate-section {
+  transform: translateY(32px) scale(0.98);
+  transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-results.animate-section.animate-in {
+  transform: translateY(0) scale(1);
+}
+
+/* Staggered animation delays for child elements */
+.animate-section .kpi:nth-child(1) { 
+  transition-delay: 0.2s; 
+  transition-duration: 0.6s;
+}
+.animate-section .kpi:nth-child(2) { 
+  transition-delay: 0.4s; 
+  transition-duration: 0.6s;
+}
+.animate-section .kpi:nth-child(3) { 
+  transition-delay: 0.6s; 
+  transition-duration: 0.6s;
+}
+
+.animate-section .timeline-item:nth-child(odd) { 
+  transition-delay: 0.2s; 
+}
+.animate-section .timeline-item:nth-child(even) { 
+  transition-delay: 0.4s; 
 }
 
 /* Accesibilidad */
