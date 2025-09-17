@@ -4,7 +4,13 @@
   <h2 class="section-title" v-reveal:up>Proyectos destacados</h2>
 
       <div class="grid" role="list" v-reveal:up.d80>
-        <a class="work" href="#contact" role="listitem" aria-label="Panel RR. HH." v-reveal:up.d140>
+        <a 
+          class="work" 
+          href="/projects/panel-rrhh" 
+          role="listitem" 
+          aria-label="Panel RR. HH." 
+          v-reveal:up.d140
+        >
           <span>Panel RR. HH.</span>
         </a>
         <a class="work" href="#contact" role="listitem" aria-label="Módulo de Reportes" v-reveal:up.d200>

@@ -16,5 +16,12 @@ Route::get('dashboard', function () {
 
 Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
 
+Route::get('/projects/{slug}', function ($slug) {
+    // por ahora mostramos siempre la misma vista demo
+    return Inertia::render('marketing/projects/ShowDemo', [
+        'slug' => $slug,
+    ]);
+});
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
