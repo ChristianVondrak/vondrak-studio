@@ -7,15 +7,15 @@
         <div class="hero-inner">
           <BaseContainer>
             <div class="hero-content">
-              <div class="hero-head glass" role="banner" aria-label="Detalle de proyecto">
-                <div class="hero-actions">
-                  <button class="btn action" @click="goBack" aria-label="Volver">
+              <header class="hero-head glass" role="banner" aria-label="Detalle de proyecto">
+                <nav class="hero-actions" aria-label="Acciones principales">
+                  <button class="btn action" @click="goBack" aria-label="Volver a la página anterior">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                       <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <span class="label">Volver</span>
                   </button>
-                  <button class="btn action" @click="shareOrCopy" aria-label="Compartir o copiar enlace">
+                  <button class="btn action" @click="shareOrCopy" aria-label="Compartir o copiar enlace del proyecto">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                       <path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                       <path d="M12 16V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -23,7 +23,7 @@
                     </svg>
                     <span class="label">Compartir</span>
                   </button>
-                </div>
+                </nav>
                 <div class="eyebrow">Caso de estudio</div>
                 <h1 class="title">
                   {{ project.title.split(' ')[0] }}
@@ -33,21 +33,20 @@
                 <ul class="tags" v-if="project.tags?.length">
                   <li v-for="t in project.tags" :key="t">{{ t }}</li>
                 </ul>
-              </div>
+              </header>
 
               <!-- VALOR Y CREDIBILIDAD INMEDIATA -->
-              <div class="hero-results animate-section reveal-delay-4">
-                <!-- KPIs Compactos -->
+              <section class="hero-results" aria-label="Métricas de resultados" v-reveal:up.d300 data-speed="slow">
                 <div class="results-kpis">
-                  <div v-for="(kpi, index) in project.kpis" :key="index" class="kpi-compact" 
-                       :class="[{ 'has-tooltip': kpi.tooltip }, `reveal-delay-${5 + index}`]"
-                       :title="kpi.tooltip">
-                    <div class="kpi-icon" v-html="getKpiIcon(kpi)"></div>
-                    <div class="kpi-data">
-                      <div class="kpi-value" :data-target="parseFloat(kpi.value)" data-suffix="">{{ kpi.value }}</div>
-                      <div class="kpi-label">{{ kpi.label }}</div>
-                    </div>
-                  </div>
+                  <ProjectKPI
+                    v-for="(k, i) in project.kpis"
+                    :key="k.label + i"
+                    :kpi="k"
+                    :animated-value="kpiCounters[k.label]"
+                    :class="{'kpi-compact': true}"
+                    v-reveal:up
+                    :data-delay="300 + i*100"
+                  />
                 </div>
                 
                 <!-- Resumen Ejecutivo -->
@@ -82,7 +81,7 @@
                     </a>
                   </div>
                 </div>
-              </div>
+              </section>
             </div>
           </BaseContainer>
         </div>
@@ -107,49 +106,49 @@
           <!-- MAIN: Conversion-optimized flow -->
           <article class="main">
             <!-- 1. STORY HOOK - Context sin redundancia -->
-            <div id="contexto" class="block block--context section-block animate-section reveal">
-              <!-- Section Header Consistente -->
-              <div class="section-header reveal-delay-1">
-                <div class="section-meta">
-                  <span class="section-tag">{{ project.industry }}</span>
-                  <span class="section-tag secondary">{{ project.timeline?.length ? `${project.timeline.length} semanas` : 'Proyecto ágil' }}</span>
-                </div>
-                <h2 class="section-title">El reto que resolvimos</h2>
-                <p class="section-subtitle">Contexto del problema y nuestro enfoque estratégico</p>
-              </div>
+            <section id="contexto" class="block block--context section-block" v-reveal:up data-speed="slow">
+              <SectionHeader
+                :tags="[
+                  { label: project.industry, type: 'primary' },
+                  { label: project.timeline?.length ? `${project.timeline.length} semanas` : 'Proyecto ágil', type: 'secondary' }
+                ]"
+                title="El reto que resolvimos"
+                subtitle="Contexto del problema y nuestro enfoque estratégico"
+                :centered="false"
+              />
               
               <!-- Section Content -->
               <div class="section-content">
                 <div class="story-content">
-                  <div class="challenge-summary reveal-delay-2">
+                  <div class="challenge-summary" v-reveal:up.d140>
                     <h3>🚨 El Desafío</h3>
                     <p>{{ project.problem }}</p>
                   </div>
-                  <div class="solution-preview reveal-delay-3">
+                  <div class="solution-preview" v-reveal:up.d220>
                     <h3>💡 Nuestro Enfoque</h3>
                     <p>{{ project.summary }}</p>
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
 
             <!-- 2. TECHNICAL SOLUTION - Para developers -->
-            <div id="solucion" class="block block--solution section-block animate-section reveal">
-              <!-- Section Header Consistente -->
-              <div class="section-header reveal-delay-1">
-                <div class="section-meta">
-                  <span class="section-tag">{{ project.role }}</span>
-                  <span v-for="tech in project.stack.slice(0, 3)" :key="tech" class="section-tag secondary">{{ tech }}</span>
-                  <span v-if="project.stack.length > 3" class="section-tag secondary">+{{ project.stack.length - 3 }} más</span>
-                </div>
-                <h2 class="section-title">Cómo lo resolvimos</h2>
-                <p class="section-subtitle">Estrategia técnica y características implementadas</p>
-              </div>
+            <section id="solucion" class="block block--solution section-block" v-reveal:up>
+              <SectionHeader
+                :tags="[
+                  { label: project.role || 'Desarrollo', type: 'primary' as const },
+                  ...project.stack.slice(0, 3).map(tech => ({ label: tech, type: 'secondary' as const })),
+                  ...(project.stack.length > 3 ? [{ label: `+${project.stack.length - 3} más`, type: 'secondary' as const }] : [])
+                ]"
+                title="Cómo lo resolvimos"
+                subtitle="Estrategia técnica y características implementadas"
+                :centered="false"
+              />
               
               <!-- Section Content -->
               <div class="section-content">
                 <div class="solution-grid">
-                  <div class="approach-list reveal-delay-2">
+                  <div class="approach-list" v-reveal:up.d140>
                     <h3>Estrategia técnica</h3>
                     <ul class="approach-items">
                       <li v-for="(item, i) in project.solution" :key="i" class="approach-item">
@@ -158,7 +157,7 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="key-features reveal-delay-3" v-if="project.features?.length">
+                  <div class="key-features" v-if="project.features?.length" v-reveal:up.d220>
                     <h3>Características clave</h3>
                     <div class="features-grid">
                       <div v-for="(f, i) in project.features" :key="i" class="feature-card">
@@ -173,84 +172,87 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
 
             <!-- 3. RESULTS VALIDATION - Proof vs claims -->  
-            <div id="resultados" class="block block--results section-block animate-section reveal">
-              <!-- Section Header Consistente -->
-              <div class="section-header reveal-delay-1">
-                <div class="section-meta">
-                  <span class="section-tag">Resultados</span>
-                  <span class="section-tag secondary">Métricas Reales</span>
-                  <span class="section-tag secondary">Impacto Medible</span>
-                </div>
-                <h2 class="section-title">Resultados conseguidos</h2>
-                <p class="section-subtitle">Métricas reales del impacto generado en el proyecto</p>
-              </div>
+            <section id="resultados" class="block block--results section-block" v-reveal:up>
+              <SectionHeader
+                :tags="[
+                  { label: 'Resultados', type: 'primary' as const },
+                  { label: 'Métricas Reales', type: 'secondary' as const },
+                  { label: 'Impacto Medible', type: 'secondary' as const }
+                ]"
+                title="Resultados conseguidos"
+                subtitle="Métricas reales del impacto generado en el proyecto"
+                :centered="false"
+              />
               
               <!-- Section Content -->
               <div class="section-content">
                 <div class="results-showcase">
-                  <div class="impact-narrative reveal-delay-2">
+                  <div class="impact-narrative" v-reveal:up.d140>
                     <p class="results-copy">{{ project.outcomes }}</p>
                   </div>
-                  <div class="impact-metrics reveal-delay-3" v-if="project.impactBullets?.length">
-                    <div v-for="(bullet, i) in project.impactBullets" :key="i" class="metric-highlight">
-                      <div class="metric-value">{{ bullet.split(' ')[0] }}</div>
-                      <div class="metric-label">{{ bullet.split(' ').slice(1).join(' ') }}</div>
+                  <div class="impact-metrics" v-if="impactMetrics.length" v-reveal:up.d220>
+                    <div v-for="(m, i) in impactMetrics" :key="m.value + i" class="metric-highlight">
+                      <div class="metric-value">{{ m.value }}</div>
+                      <div class="metric-label">{{ m.label }}</div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
+
+            <!-- 3.5 TIMELINE - Para no dejar timeline sólo en el aside -->
+            <section id="cronograma" class="block section-block" v-if="project.timeline?.length" v-reveal:up>
+              <SectionHeader
+                :tags="[
+                  { label: 'Planificación', type: 'primary' as const },
+                  { label: `${project.timeline.length} hitos`, type: 'secondary' as const }
+                ]"
+                title="Cronograma del proyecto"
+                subtitle="Hitos principales y semanas de ejecución"
+                :centered="false"
+              />
+              <div class="section-content">
+                <ul class="timeline">
+                  <li v-for="(t, i) in project.timeline" :key="t.label + i">
+                    <div>
+                      <strong>{{ t.label }}</strong>
+                      <span class="tiny">{{ t.when }}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </section>
 
             <!-- 5. VISUAL EVIDENCE - Galería con contexto -->
-            <div id="galeria" class="block section-block animate-section reveal" v-if="displayGallery.length">
-              <!-- Section Header Consistente -->
-              <div class="section-header reveal-delay-1">
-                <div class="section-meta">
-                  <span class="section-tag">Visual</span>
-                  <span class="section-tag secondary">{{ displayGallery.length }} Capturas</span>
-                  <span class="section-tag secondary">UI/UX</span>
-                </div>
-                <h2 class="section-title">Evidencia visual</h2>
-                <p class="section-subtitle">Capturas del producto en funcionamiento</p>
-              </div>
-              
-              <!-- Section Content -->
-              <div class="section-content">
-                <div class="gallery">
-                <figure
-                  v-for="(g, i) in displayGallery"
-                  :key="g.src"
-                  :class="[{ 'span-2': (i % 5) === 0 }, { 'is-loading': !galleryLoaded[i] }]"
-                >
-                  <button class="img-btn" @click="openLightbox(i)" :aria-label="`Abrir imagen ${i+1} en visor`">
-                    <img :src="g.src" :alt="g.caption || project.title" loading="lazy" @load="onGalleryLoad(i)" />
-                  </button>
-                  <figcaption v-if="g.caption">{{ g.caption }}</figcaption>
-                </figure>
-                </div>
-              </div>
-            </div>
+            <ProjectGallery
+              :images="displayGallery"
+              :fallback-alt="project.title"
+              title="Evidencia visual"
+              subtitle="Capturas del producto en funcionamiento"
+              :allow-loop="true"
+              :preload-count="3"
+            />
 
             <!-- 4. TESTIMONIAL - Validación social -->
-            <div id="testimonial" class="testimonial section-block reveal" v-if="project.testimonial">
-              <!-- Section Header Consistente -->
-              <div class="section-header reveal-delay-1">
-                <div class="section-meta">
-                  <span class="section-tag">Testimonial</span>
-                  <span class="section-tag secondary">{{ project.client }}</span>
-                  <span class="section-tag secondary">Validación</span>
-                </div>
-                <h2 class="section-title">Lo que dicen nuestros clientes</h2>
-                <p class="section-subtitle">Experiencia directa del equipo que trabajó con nosotros</p>
-              </div>
+            <section id="testimonial" class="testimonial section-block" v-if="project.testimonial" v-reveal:up data-speed="slow">
+              <SectionHeader
+                :tags="[
+                  { label: 'Testimonial', type: 'primary' as const },
+                  { label: project.client, type: 'secondary' as const },
+                  { label: 'Validación', type: 'secondary' as const }
+                ]"
+                title="Lo que dicen nuestros clientes"
+                subtitle="Experiencia directa del equipo que trabajó con nosotros"
+                :centered="false"
+              />
               
               <!-- Section Content -->
               <div class="section-content">
-                <div class="testimonial-card">
-                  <div class="testimonial-top reveal-delay-2">
+                <div class="testimonial-card" v-reveal:up.d140>
+                  <div class="testimonial-top">
                     <div class="testimonial-left">
                   <div v-if="project.testimonial.avatar" class="avatar-wrap">
                     <img class="avatar" :src="project.testimonial.avatar" :alt="`Avatar de ${project.testimonial.name}`" />
@@ -267,10 +269,10 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
 
             <!-- 6. ACTION ZONE - CTA optimizado -->
-            <div class="cta-zone section-block animate-section reveal" role="region" aria-label="Llamada a la acción">
+            <div class="cta-zone section-block" role="region" aria-label="Llamada a la acción" v-reveal:up>
               <div class="cta-container">
                 <div class="cta-content">
                   <div class="cta-header">
@@ -305,50 +307,15 @@
             </div>
           </article>
 
-          <!-- ASIDE: extras/contexto -->
-          <aside class="side">
-            <div class="card quick-nav" aria-label="Navegación rápida">
-              <h3>Contenido</h3>
-              <ul>
-                <li v-for="s in sectionOrder" :key="s.id">
-                  <a :href="`#${s.id}`" :class="{active: activeSection === s.id}" @click.prevent="scrollToSection(s.id)">{{ s.label }}</a>
-                </li>
-              </ul>
-            </div>
-            <div class="card meta">
-              <h3>Cliente</h3>
-              <p>{{ project.client }}</p>
-              <h3>Industria</h3>
-              <p>{{ project.industry }}</p>
-              <h3 v-if="project.role">Rol</h3>
-              <p v-if="project.role">{{ project.role }}</p>
-            </div>
-
-            <div class="card">
-              <h3>Stack</h3>
-              <ul class="stack">
-                <li v-for="s in project.stack" :key="s">{{ s }}</li>
-              </ul>
-            </div>
-
-            <div class="card" v-if="project.timeline?.length">
-              <h3>Timeline</h3>
-              <ol class="timeline">
-                <li v-for="t in project.timeline" :key="t.label">
-                  <span class="dot"></span>
-                  <div>
-                    <strong>{{ t.label }}</strong>
-                    <div class="tiny">{{ t.when }}</div>
-                  </div>
-                </li>
-              </ol>
-            </div>
-
-            <div class="card links">
-              <a v-if="project.live" :href="project.live" target="_blank" rel="noopener">Ver online →</a>
-              <a v-if="project.repo" :href="project.repo" target="_blank" rel="noopener">Código →</a>
-            </div>
-          </aside>
+          <!-- ASIDE unificado -->
+          <ProjectAside
+            class="side"
+            :project="project"
+            :sections="sectionOrder"
+            :active-section="activeSection"
+            @navigate="scrollToSection"
+            @share="shareOrCopy"
+          />
         </div>
       </BaseContainer>
     </section>
@@ -369,39 +336,27 @@
     </div>
   </Transition>
 
-  <!-- LIGHTBOX accesible -->
-  <div v-if="isLightboxOpen && displayGallery.length" class="lightbox" role="dialog" aria-modal="true" aria-label="Visor de imágenes" @keydown.esc="closeLightbox" tabindex="-1" ref="lightboxRef">
-    <button class="lightbox__overlay" @click="closeLightbox" aria-label="Cerrar visor"></button>
-    <div class="lightbox__inner">
-      <button class="lightbox__close" @click="closeLightbox" aria-label="Cerrar">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </button>
-      <button class="lightbox__nav prev" @click="prevImage" aria-label="Anterior">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-  <img :src="displayGallery[lightboxIndex].src" :alt="displayGallery[lightboxIndex].caption || project.title" />
-      <button class="lightbox__nav next" @click="nextImage" aria-label="Siguiente">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-  <div class="lightbox__caption" v-if="displayGallery[lightboxIndex].caption">{{ displayGallery[lightboxIndex].caption }}</div>
-    </div>
-  </div>
+
 </template>
 
 <script setup lang="ts">
 import DefaultLayout from '@/layouts/marketing/DefaultLayout.vue'
 import BaseContainer from '@/components/marketing/base/BaseContainer.vue'
+import ProjectKPI from '@/components/marketing/ui/ProjectKPI.vue'
+import SectionHeader from '@/components/marketing/ui/SectionHeader.vue'
+import ProjectAside from '@/components/marketing/ui/ProjectAside.vue'
+import ProjectGallery from '@/components/marketing/ui/ProjectGallery.vue'
 import { onMounted, onBeforeUnmount, ref, nextTick, computed } from 'vue'
+import { useProjectKPIs } from '@/composables/useProjectKPIs'
+import { useProjectUtils } from '@/composables/useProjectUtils'
 
-/**
- * IMPORTA EL COVER DESDE resources/js/assets/projects/orion/image.png
- * (Vite lo optimiza y genera hash para cache busting)
- */
-import coverOrion from '@/assets/projects/orion/image.png'
+
+
+
 
 type KPI = { label: string; value: string; tooltip?: string }
 type TimelineItem = { label: string; when: string }
-type GalleryItem = { src: string; caption?: string }
+type GalleryItem = { src?: string; caption?: string }
 type Testimonial = { quote: string; name: string; role: string; avatar?: string }
 type Project = {
   title: string
@@ -418,81 +373,184 @@ type Project = {
   industry: string
   role?: string
   stack: string[]
-  live: string | null
-  repo: string | null
+  live?: string
+  repo?: string
   timeline: TimelineItem[]
   gallery?: GalleryItem[]
+  galleryCaptions?: string[]
   testimonial?: Testimonial
   tags?: string[]
 }
+
+// Props desde Inertia (preparado para DB). Usamos Partial para permitir datos incompletos.
+const props = defineProps<{ project?: Partial<Project>; slug?: string }>()
 
 /**
  * DEMO DATA — luego lo moveremos a content/ o BD
  * Si agregas imágenes de galería: import g1 from '@/assets/projects/orion/galeria-1.png' ...
  */
-const project: Project = {
-  title: 'Proyecto Orion',
-  excerpt: 'Plataforma para orquestar procesos y reportes en tiempo real con foco en rendimiento y conversión.',
-  cover: coverOrion,
-  tags: ['B2B', 'SaaS', 'Ops'],
+const demoProject: Project = {
+  title: 'Plataforma de Gestión de Proyectos y Honorarios para Tech Savvy Way',
+  excerpt:
+  'Sistema web integral para automatizar pagos, centralizar datos y monitorear desempeño de contratistas en tiempo real mediante WorkSnaps y alertas inteligentes.',
+  cover: '/images/projects/orion/dashboard.jpg',
+  tags: ['Laravel', 'ETL', 'RRHH', 'Dashboards', 'Notificaciones'],
 
   // MAIN content (prioritario)
-  summary:
-    'Construimos una aplicación unificada que integra flujo de aprobación, reportería exportable y tableros de métricas para acelerar decisiones y mejorar la visibilidad.',
-  problem:
-    'La organización gestionaba procesos en múltiples herramientas, sin trazabilidad ni KPIs unificados; esto generaba tiempos de respuesta altos y poca visibilidad.',
+  summary: `Desarrollé una aplicación web para automatizar la gestión de proyectos, cálculo de honorarios y monitoreo de contratistas para el Grupo Tech Savvy Way. 
+
+
+`,
+  problem: `La empresa gestionaba sus proyectos y contratistas mediante hojas de cálculo y validaciones manuales, lo que generaba errores frecuentes, falta de trazabilidad y retrasos en los pagos. Los contratistas debían enviar sus propios cálculos de horas y bonos, los cuales eran validados uno por uno por el departamento de Recursos Humanos usando WorkSnaps, sin alertas ni automatización. 
+
+
+`,
   solution: [
-    'Backend Laravel con políticas, eventos y colas para tareas pesadas.',
-    'SPA Vue 3 + Inertia con flujos guiados, estados claros y accesibilidad.',
-    'Exportación PDF/CSV, auditoría y tablero de KPIs con caché.',
-    'Infra con Docker, staging y healthchecks; monitoreo de performance.',
+  `Desarrollo de módulo para gestión de proyectos y asignación de contratistas 
+
+
+`,
+  `Proceso ETL automatizado con integración a la API de WorkSnaps 
+
+
+`,
+  `Generación automática de montos por honorarios y bonos según Activity Index 
+
+
+`,
+  `Notificaciones por correo y WhatsApp a contratistas tras la aprobación de montos 
+
+
+`,
+  `Dashboard con métricas clave para RRHH y supervisores 
+
+
+`,
+  `Alertas automáticas por desviación, inactividad o bajo rendimiento 
+
+
+`,
   ],
   outcomes:
-    'Disminuimos el tiempo de ciclo en un 42% y aumentamos la tasa de adopción interna al 80%. Core Web Vitals en verde con LCP 1.4s y TBT estable.',
-  impactBullets: ['−42% tiempo de ciclo', '+80% adopción interna', 'LCP 1.4s, Core Web Vitals “OK”'],
-  features: ['Perfiles y permisos', 'Historial y auditoría', 'Bandejas por equipo', 'Reportes exportables'],
+    'El sistema automatizó el 100% del cálculo de honorarios, eliminó errores en los pagos y redujo el tiempo de cierre mensual de 3 días a solo unas horas. Además, mejoró la visibilidad del desempeño de contratistas mediante estadísticas y alertas integradas, reemplazando por completo el uso de hojas de cálculo.',
+  impactBullets: [
+    '−100% errores en el cálculo de bonos y pagos',
+  '3 días → 3 horas en el cierre mensual de pagos',
+  '+90% cobertura automática en generación de montos',
+  ],
+  features: [
+    'Carga y cálculo automático de horas desde WorkSnaps',
+  `Sistema de bonificación por índice de actividad (10% y 20%) y deducciones (−10%) 
+
+
+`,
+    'Corte mensual por proyecto con cálculo consolidado',
+  `Envío de montos por correo y plantilla de WhatsApp tras la aprobación 
+
+
+`,
+    'Alerta por desviación de horas trabajadas',
+    'Dashboard de KPIs en tiempo real para RRHH',
+    'Módulo para gestión y detalle de contratistas',
+    'ETL programado vía comandos Artisan',
+  ],
 
   // KPIs
   kpis: [
-    { label: 'Tiempo de ciclo', value: '−42%', tooltip: 'Reducción del tiempo promedio entre inicio y finalización de procesos críticos' },
-    { label: 'LCP', value: '1.4s', tooltip: 'Largest Contentful Paint - Tiempo de carga del elemento más grande visible' },
-    { label: 'Adopción', value: '+80%', tooltip: 'Incremento en la tasa de adopción interna de la plataforma por parte de los equipos' },
+    {
+      label: 'Tiempo de cierre',
+      value: '3 horas',
+      tooltip: 'Duración del cierre mensual luego de la automatización',
+    },
+    {
+      label: 'Errores de cálculo',
+      value: '0 errores',
+      tooltip: 'Errores en montos de pagos o bonos luego de la implementación',
+    },
+    {
+  label: 'Montos automáticos',
+      value: '90%',
+  tooltip: 'Porcentaje de contratistas con montos generados automáticamente',
+    },
   ],
 
   // ASIDE
-  client: 'Orion Labs',
-  industry: 'Operaciones',
-  role: 'Full-stack',
-  stack: ['Laravel', 'Inertia', 'Vue 3', 'MySQL', 'Redis', 'Docker'],
-  live: null,
-  repo: null,
+  client: 'Grupo Tech Savvy Way',
+  industry: 'Tecnología / Recursos Humanos',
+  role: 'Fullstack Developer',
+  stack: [
+    'Laravel',
+    'MySQL',
+    'Blade',
+    'Tailwind CSS',
+    'Chart.js',
+    'WorkSnaps API',
+    'WhatsApp Cloud API',
+    'Docker',
+    'PHP',
+  ],
+  live: undefined,
+  repo: undefined,
   timeline: [
-    { label: 'Kickoff', when: 'Semana 1' },
-    { label: 'MVP', when: 'Semana 4' },
-    { label: 'Go-Live', when: 'Semana 7' },
-    { label: 'Optimización', when: 'Semana 8–9' },
+    { label: 'Análisis de requerimientos', when: 'Semana 1' },
+    { label: 'Diseño de base de datos', when: 'Semana 2' },
+    { label: 'Módulo de gestión de proyectos', when: 'Semana 3–5' },
+    { label: 'Generación de honorarios y alertas', when: 'Semana 6–9' },
+    { label: 'Notificaciones y cierre de pagos', when: 'Semana 10–12' },
+    { label: 'Dashboard de recursos humanos', when: 'Semana 13–14' },
   ],
 
-  // Galería (opcional)
-  gallery: [],
+  // Galería (captions del cliente -> placeholders dinámicos)
+  gallery: [
+    { 
+      src: '/images/projects/orion/dashboard.jpg',
+      caption: 'Dashboard principal con métricas de RRHH en tiempo real' 
+    },
+    { 
+      src: '/images/projects/orion/proyectos.jpg',
+      caption: 'Módulo de gestión de proyectos y asignación de contratistas' 
+    },
+    { 
+      src: '/images/projects/orion/proceso_pago.jpg',
+      caption: 'Flujo automatizado de cálculo y aprobación de pagos' 
+    },
+    { 
+      src: '/images/projects/orion/reportes.jpg',
+      caption: 'Sistema de reportes y métricas de desempeño' 
+    },
+    { 
+      src: '/images/projects/orion/notificaciones.jpg',
+      caption: 'Alertas automáticas por inactividad y desviaciones' 
+    },
+    { 
+      src: '/images/projects/orion/detalle_proyecto.jpg',
+      caption: 'Vista detallada de proyecto con seguimiento de horas' 
+    },
+  ],
 
   // Testimonial (opcional)
   testimonial: {
     quote:
-      'La plataforma nos dio claridad operativa y aceleró la entrega. El foco en UX hizo que el equipo se adoptara rápido.',
-    name: 'María Fernández',
-    role: 'Directora de Operaciones, Orion Labs',
-    // avatar: avatarImg
+      'Automatizamos todo el flujo de pagos y seguimiento de contratistas. Hoy no podríamos volver a usar hojas de Excel.',
+    name: 'Director de Tecnología',
+    role: 'Grupo Tech Savvy Way',
   },
+}
+
+// Merge: datos del backend sobre el demo para no dejar campos fuera
+const project: Project = Object.assign({}, demoProject, props.project || {})
+if (!project.cover) {
+  project.cover = '/images/projects/orion/dashboard.jpg'
 }
 
 // --- Navegación anclada y scrollspy ---
 const sectionOrder = [
   { id: 'contexto', label: 'Contexto' },
   { id: 'solucion', label: 'Solución' },
+  { id: 'cronograma', label: 'Cronograma' },
   { id: 'resultados', label: 'Resultados' },
-  { id: 'testimonial', label: 'Testimonial' },
   { id: 'galeria', label: 'Galería' },
+  { id: 'testimonial', label: 'Testimonial' },
 ]
 const activeSection = ref<string>('contexto')
 let observer: IntersectionObserver | null = null
@@ -519,123 +577,26 @@ const scrollToSection = (id: string) => {
 
 onMounted(() => {
   createObserver()
-  createKpiObserver()
   createStickyObserver()
-  initializeScrollAnimations()
   // Si llega con hash, desplazamos suave
   if (location.hash) {
     const id = location.hash.replace('#', '')
     nextTick(() => scrollToSection(id))
   }
-  // Navegación con teclado en lightbox
-  window.addEventListener('keydown', handleKeyNav)
 })
 
 onBeforeUnmount(() => {
   if (observer) observer.disconnect()
   if (stickyObserver.value) stickyObserver.value.disconnect()
-  window.removeEventListener('keydown', handleKeyNav)
 })
 
-// --- Acciones hero ---
-const goBack = () => {
-  if (window.history.length > 1) window.history.back()
-  else window.location.href = '/'
-}
+// --- Acciones hero usando composable ---
+const { goBack, shareOrCopy } = useProjectUtils()
 
-const shareOrCopy = async () => {
-  const data = { title: project.title, text: project.excerpt, url: window.location.href }
-  try {
-    const nav = navigator as any
-    if (typeof nav.share === 'function') return await nav.share(data)
-  } catch {
-    // continúa al fallback
-  }
-  try {
-    await navigator.clipboard.writeText(window.location.href)
-    // feedback ligero
-    tempToast('Enlace copiado')
-  } catch {
-    tempToast('No se pudo copiar')
-  }
-}
+// --- KPIs usando composable ---
+const { kpiCounters } = useProjectKPIs(project.kpis)
 
-const tempToast = (msg: string) => {
-  const toast = document.createElement('div')
-  toast.className = 'toast'
-  toast.textContent = msg
-  document.body.appendChild(toast)
-  setTimeout(() => toast.classList.add('show'), 10)
-  setTimeout(() => {
-    toast.classList.remove('show')
-    setTimeout(() => toast.remove(), 300)
-  }, 1600)
-}
-
-// --- KPIs: icon mapping & counters ---
-const getKpiIcon = (kpi: KPI): string => {
-  const l = kpi.label.toLowerCase()
-  if (l.includes('tiempo') || l.includes('ciclo')) {
-    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M7 13l3 3 7-7" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2L8 6l4 4 4-4-4-4z" fill="#22d3ee" opacity="0.2"/></svg>`
-  }
-  if (l.includes('lcp') || l.includes('performance') || l.includes('core web vitals')) {
-    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#22d3ee" stroke-width="2"/><path d="M12 6v6l4 2" stroke="#22d3ee" stroke-width="2" stroke-linecap="round"/></svg>`
-  }
-  return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#22d3ee"/></svg>`
-}
-
-// Animated counters para KPIs del hero
-const kpiCounters = ref<Record<string, number>>({})
-const kpiAnimated = ref<Record<string, boolean>>({})
-
-const animateCounter = (target: number, key: string) => {
-  const duration = 1500
-  const start = performance.now()
-  const isNegative = target < 0
-  const absTarget = Math.abs(target)
-  
-  const animate = (currentTime: number) => {
-    const elapsed = currentTime - start
-    const progress = Math.min(elapsed / duration, 1)
-    const easeOut = 1 - Math.pow(1 - progress, 3)
-    const current = Math.floor(absTarget * easeOut)
-    kpiCounters.value[key] = isNegative ? -current : current
-    
-    if (progress < 1) requestAnimationFrame(animate)
-  }
-  requestAnimationFrame(animate)
-}
-
-const createKpiObserver = () => {
-  const options = { root: null, rootMargin: '0px', threshold: 0.3 }
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        project.kpis.forEach((kpi) => {
-          if (!kpiAnimated.value[kpi.label]) {
-            const numValue = parseInt(kpi.value.replace(/[^\d-]/g, ''))
-            if (!isNaN(numValue)) {
-              animateCounter(numValue, kpi.label)
-              kpiAnimated.value[kpi.label] = true
-            }
-          }
-        })
-        observer.disconnect()
-      }
-    })
-  }, options)
-  
-  const kpiContainer = document.querySelector('.kpis')
-  if (kpiContainer) observer.observe(kpiContainer)
-}
-
-
-
-// --- Galería: lightbox + skeleton ---
-const isLightboxOpen = ref(false)
-const lightboxIndex = ref(0)
-const lightboxRef = ref<HTMLDivElement | null>(null)
-const galleryLoaded = ref<Record<number, boolean>>({})
+// --- Galería: generación de placeholders ---
 // Placeholders si no hay galería
 const makePlaceholder = (title: string, i: number): string => {
   const w = 1200, h = 800
@@ -657,39 +618,49 @@ const makePlaceholder = (title: string, i: number): string => {
   </svg>`
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`
 }
-const defaultGallery: GalleryItem[] = [
-  { src: makePlaceholder(project.title, 0), caption: 'Dashboard principal' },
-  { src: makePlaceholder(project.title, 1), caption: 'Flujos y estados' },
-  { src: makePlaceholder(project.title, 2), caption: 'Reportes y exportación' },
-]
-const displayGallery = computed<GalleryItem[]>(() => (project.gallery && project.gallery.length ? project.gallery : defaultGallery))
+const displayGallery = computed(() => {
+  if (project.gallery && project.gallery.length) {
+    return project.gallery.map((item, index) => ({
+      src: item.src || makePlaceholder(project.title, index),
+      caption: item.caption || `Imagen ${index + 1}`
+    }))
+  }
+  const captions =
+    project.galleryCaptions && project.galleryCaptions.length
+      ? project.galleryCaptions
+      : ['Dashboard principal', 'Flujos y estados', 'Reportes y exportación']
+  return captions.map((caption, i) => ({ src: makePlaceholder(project.title, i), caption }))
+})
 
-const onGalleryLoad = (i: number) => {
-  galleryLoaded.value[i] = true
-}
 
-const openLightbox = (i: number) => {
-  lightboxIndex.value = i
-  isLightboxOpen.value = true
-  nextTick(() => lightboxRef.value?.focus())
-}
-const closeLightbox = () => {
-  isLightboxOpen.value = false
-}
-const prevImage = () => {
-  if (!displayGallery.value.length) return
-  lightboxIndex.value = (lightboxIndex.value - 1 + displayGallery.value.length) % displayGallery.value.length
-}
-const nextImage = () => {
-  if (!displayGallery.value.length) return
-  lightboxIndex.value = (lightboxIndex.value + 1) % displayGallery.value.length
-}
-const handleKeyNav = (e: KeyboardEvent) => {
-  if (!isLightboxOpen.value) return
-  if (e.key === 'ArrowLeft') prevImage()
-  if (e.key === 'ArrowRight') nextImage()
-  if (e.key === 'Escape') closeLightbox()
-}
+
+// --- Impact metrics normalizados a partir de impactBullets ---
+const impactMetrics = computed(() => {
+  return (project.impactBullets || []).map((raw) => {
+    const s = String(raw).trim()
+    // Caso con flecha (evolución de valor): "3 días → 3 horas en ..."
+    if (s.includes('→')) {
+      const [left, ...restAfterArrow] = s.split('→')
+      const rightAndRest = restAfterArrow.join('→').trim()
+      const [right, ...restLabelParts] = rightAndRest.split(' en ')
+      const value = `${left.trim()} → ${right?.trim() ?? ''}`.trim()
+      const label = restLabelParts.length
+        ? restLabelParts.join(' en ').trim()
+        : s.slice(value.length).trim()
+      return { value, label: label || 'Mejora' }
+    }
+    // Caso valor al inicio (+/−/%/número)
+    const firstSpace = s.indexOf(' ')
+    if (firstSpace > 0) {
+      const head = s.slice(0, firstSpace)
+      if (/[0-9%+\-−]/.test(head)) {
+        return { value: head, label: s.slice(firstSpace + 1).trim() }
+      }
+    }
+    // Fallback: mostrar todo como valor
+    return { value: s, label: '' }
+  })
+})
 
 // --- Sticky CTA ---
 const showStickyCTA = ref(false)
@@ -708,121 +679,143 @@ const createStickyObserver = () => {
   if (mainCTA) stickyObserver.value.observe(mainCTA)
 }
 
-// --- Scroll Animations ---
-const initializeScrollAnimations = () => {
-  const animationObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          // Delay para que la animación sea más apreciable
-          setTimeout(() => {
-            entry.target.classList.add('animate-in')
-          }, 150)
-        }
-      })
-    },
-    { 
-      threshold: 0.2,  // Requiere más visibilidad antes de animar
-      rootMargin: '0px 0px -100px 0px'  // Más margen para activar más tarde
-    }
-  )
 
-  // Observar secciones principales con delay escalonado
-  const sections = document.querySelectorAll('.block, .testimonial, .timeline, .gallery, .hero-results')
-  sections.forEach((section, index) => {
-    section.classList.add('animate-section')
-    // Delay escalonado para efecto cascade más pronunciado
-    setTimeout(() => {
-      animationObserver.observe(section)
-    }, index * 200)
-  })
-}
 
-// --- Testimonial helpers ---
-const initials = (name = '') => {
-  const parts = name.split(' ').filter(Boolean)
-  return (parts[0]?.[0] || '') + (parts[1]?.[0] || '')
-}
-const avatarStyle = (name = '') => {
-  // simple deterministic color from name
-  const colors = ['#f97316', '#fb7185', '#60a5fa', '#34d399', '#a78bfa']
-  let sum = 0
-  for (let i = 0; i < name.length; i++) sum += name.charCodeAt(i)
-  const c = colors[sum % colors.length]
-  return { background: `linear-gradient(135deg, ${c}, rgba(167,139,250,0.6))`, color: '#0b1220' }
-}
+// --- Testimonial helpers del composable ---
+const { initials, avatarStyle } = useProjectUtils()
 </script>
 
 <style scoped>
-/* ------ HERO mejorado ------ */
-.hero{
-  position:relative; color:#fff;
+/* CSS Custom Properties para mejor consistencia */
+:root {
+  --hero-min-height: 90vh;
+  --section-padding: 4rem;
+  --card-padding: 2rem;
+  --border-radius-lg: 16px;
+  --border-radius-md: 12px;
+  --border-radius-sm: 8px;
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.cover-wrap{
-  position:relative; min-height: 90vh; isolation:isolate;
+
+/* ------ HERO mejorado ------ */
+.hero {
+  position: relative; 
+  color: #fff;
+}
+
+.cover-wrap {
+  position: relative; 
+  min-height: var(--hero-min-height); 
+  isolation: isolate;
   background:
     radial-gradient(1200px 60% at 50% 10%, rgba(34,211,238,.22), transparent 60%),
     radial-gradient(800px 40% at 20% 0%, rgba(167,139,250,.18), transparent 60%);
 }
-.cover{
-  position:absolute; inset:0;
+
+.cover {
+  position: absolute; 
+  inset: 0;
   background:
     linear-gradient(180deg, rgba(11,18,32,0) 0%, rgba(11,18,32,.65) 60%, rgba(11,18,32,.9) 100%),
     var(--cover) center/cover no-repeat;
   filter: saturate(108%) contrast(106%);
-  z-index:-1;
+  z-index: -1;
 }
-.hero-inner{ 
-  display:flex; align-items:center; justify-content:center; flex-direction:column;
-  min-height: inherit; padding: 32px 0;
+
+.hero-inner { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  flex-direction: column;
+  min-height: inherit; 
+  padding: 2rem 0;
 }
-.hero-content{
-  display:grid; 
+
+.hero-content {
+  display: grid; 
   grid-template-areas: 
     "header header"
     "results results";
   grid-template-rows: auto 1fr;
-  gap: 32px; 
-  width: 100%; max-width: 1100px;
-  min-height: 70vh; /* Asegurar uso del espacio vertical */
+  gap: 2rem; 
+  width: 100%; 
+  max-width: 1100px;
+  min-height: 70vh;
 }
-.hero-head{
+
+.hero-head {
   grid-area: header;
-  padding: clamp(20px, 4vw, 32px);
-  text-align: center; /* Centrar para mayor impacto */
+  padding: clamp(1.25rem, 4vw, 2rem);
+  text-align: center;
 }
-.hero-head.glass{
-  background: rgba(8,12,24,.34);
-  border:1px solid rgba(255,255,255,.16);
-  border-radius: 16px;
+
+.hero-head.glass {
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--border-radius-lg);
   backdrop-filter: blur(10px) saturate(130%);
-  box-shadow: 0 10px 40px rgba(0,0,0,.28);
+  box-shadow: var(--shadow-lg);
 }
-.hero-actions{ display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap }
-.btn.action{
-  display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  height:40px; padding:0 16px; border-radius:12px; color:#e9ecff; background: rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.18); cursor:pointer; font-weight:600; font-size:.92rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+.hero-actions { 
+  display: flex; 
+  gap: 0.75rem; 
+  margin-bottom: 1rem; 
+  flex-wrap: wrap;
+  justify-content: center;
 }
-.btn.action .label{ line-height:1; }
-.btn.action:hover{ 
-  color:#0b1220; background: linear-gradient(90deg, #22d3ee, #a78bfa); 
-  box-shadow: 0 8px 24px rgba(34,211,238,.3); transform: translateY(-2px);
+/* Componente Botón mejorado */
+.btn.action {
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 0.5rem;
+  height: 2.5rem; 
+  padding: 0 1rem; 
+  border-radius: var(--border-radius-md); 
+  color: #e9ecff; 
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.18); 
+  cursor: pointer; 
+  font-weight: 600; 
+  font-size: 0.92rem;
+  transition: var(--transition-base);
+  text-decoration: none;
 }
-.btn.action:focus-visible{ outline:2px solid #22d3ee; outline-offset:2px }
-.eyebrow{ 
+
+.btn.action .label { 
+  line-height: 1; 
+}
+
+.btn.action:hover { 
+  color: #0b1220; 
+  background: linear-gradient(90deg, var(--accent), #a78bfa); 
+  box-shadow: 0 8px 24px rgba(34,211,238,.3); 
+  transform: translateY(-2px);
+}
+
+.btn.action:focus-visible { 
+  outline: 2px solid var(--accent); 
+  outline-offset: 2px;
+}
+
+/* Componentes de texto */
+.eyebrow { 
   color: var(--accent); 
-  font-size:.9rem; 
-  letter-spacing:.6px; 
-  text-transform:uppercase; 
+  font-size: 0.9rem; 
+  letter-spacing: 0.6px; 
+  text-transform: uppercase; 
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 }
-.title{ 
-  margin:0 0 16px; 
-  font-size: clamp(28px, 4.2vw, 48px); 
-  line-height:1.1; 
+
+.title { 
+  margin: 0 0 1rem; 
+  font-size: clamp(1.75rem, 4.2vw, 3rem); 
+  line-height: 1.1; 
   color: var(--foreground);
   text-shadow: 0 2px 4px rgba(0,0,0,.3);
 }
@@ -1014,9 +1007,6 @@ const avatarStyle = (name = '') => {
 }
 .project-type, .timeline{
   padding: 6px 14px;
-  background: var(--glass);
-  border: 1px solid var(--stroke);
-  border-radius: var(--radius);
   font-size: 0.8rem;
   color: var(--accent);
   font-weight: 600;
@@ -1585,6 +1575,15 @@ const avatarStyle = (name = '') => {
 .toast{ position:fixed; bottom:18px; left:50%; transform:translateX(-50%); background:#0b1220; color:#e9ecff; border:1px solid rgba(255,255,255,.2); border-radius:10px; padding:8px 12px; opacity:0; transition: opacity .2s ease }
 .toast.show{ opacity:1 }
 
+/* Meta card (aside) improvements */
+.card.meta .meta-header{ display:flex; flex-direction:column; gap:10px; margin-bottom:12px }
+.card.meta .meta-tags{ display:flex; gap:8px; flex-wrap:wrap }
+.card.meta .meta-body{ display:flex; flex-direction:column; gap:10px }
+.card.meta .meta-row{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:6px 0; border-top:1px dashed rgba(255,255,255,.03) }
+.card.meta .meta-row:first-of-type{ border-top:none; padding-top:0 }
+.muted-link{ color:var(--muted); text-decoration:none; border-bottom:1px dashed rgba(255,255,255,.06); padding-bottom:2px }
+.muted-link:hover{ color:var(--accent) }
+
 /* RESPONSIVE */
 @media (max-width: 1100px){
   .grid{ grid-template-columns: 1fr }
@@ -1730,50 +1729,7 @@ const avatarStyle = (name = '') => {
   .btn.sticky-primary{ width: 100% }
 }
 
-/* Scroll-triggered animations - Más dramáticas */
-.animate-section {
-  opacity: 0;
-  transform: translateY(48px) scale(0.95);
-  filter: blur(2px);
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-section.animate-in {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0px);
-}
-
-/* Hero Results animation override */
-.hero-results.animate-section {
-  transform: translateY(32px) scale(0.98);
-  transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.hero-results.animate-section.animate-in {
-  transform: translateY(0) scale(1);
-}
-
-/* Staggered animation delays for child elements */
-.animate-section .kpi:nth-child(1) { 
-  transition-delay: 0.2s; 
-  transition-duration: 0.6s;
-}
-.animate-section .kpi:nth-child(2) { 
-  transition-delay: 0.4s; 
-  transition-duration: 0.6s;
-}
-.animate-section .kpi:nth-child(3) { 
-  transition-delay: 0.6s; 
-  transition-duration: 0.6s;
-}
-
-.animate-section .timeline-item:nth-child(odd) { 
-  transition-delay: 0.2s; 
-}
-.animate-section .timeline-item:nth-child(even) { 
-  transition-delay: 0.4s; 
-}
+/* Las animaciones de scroll ahora son manejadas por la directiva v-reveal */
 
 /* Accesibilidad */
 .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }

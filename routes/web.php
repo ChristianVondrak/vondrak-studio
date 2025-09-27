@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\LeadController;
 
 // Route::get('/', function () {
@@ -16,12 +17,7 @@ Route::get('dashboard', function () {
 
 Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
 
-Route::get('/projects/{slug}', function ($slug) {
-    // por ahora mostramos siempre la misma vista demo
-    return Inertia::render('marketing/projects/ShowDemo', [
-        'slug' => $slug,
-    ]);
-});
+Route::get('/projects/{slug}', [ProjectsController::class, 'show'])->name('projects.show');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

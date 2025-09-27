@@ -5,11 +5,12 @@
 
       <div class="grid" role="list" v-reveal:up.d80>
         <a 
-          class="work" 
+          class="work work--panel-rrhh" 
           href="/projects/panel-rrhh" 
           role="listitem" 
           aria-label="Panel RR. HH." 
           v-reveal:up.d140
+          :style="{ '--bg-image': 'url(/images/projects/orion/dashboard.jpg)' }"
         >
           <span>Panel RR. HH.</span>
         </a>
