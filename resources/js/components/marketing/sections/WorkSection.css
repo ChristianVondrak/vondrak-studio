@@ -7,6 +7,21 @@
   background: linear-gradient(120deg, rgba(255,77,172,.25), rgba(255,255,255,.06));
   border:1px solid var(--stroke, rgba(255,255,255,.15));
 }
+.work--panel-rrhh{
+  background: 
+    linear-gradient(180deg, rgba(11,18,32,0.3) 0%, rgba(11,18,32,0.8) 100%),
+    var(--bg-image) center/cover no-repeat;
+}
+.work--avantiway{
+  background:
+    linear-gradient(180deg, rgba(8,24,68,0.32) 0%, rgba(8,24,68,0.85) 100%),
+    var(--bg-image) center/cover no-repeat;
+}
+.work--vondrak{
+  background:
+    linear-gradient(180deg, rgba(5,11,26,0.35) 0%, rgba(5,11,26,0.9) 100%),
+    var(--bg-image) center/cover no-repeat;
+}
 .work span{
   padding:10px 12px; background: rgba(0,0,0,.35); border-top-right-radius:10px;
 }

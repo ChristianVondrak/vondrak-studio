@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Images</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .image-test { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        img { max-width: 300px; height: auto; margin: 10px 0; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Test de Imágenes del Proyecto</h1>
+    
+    <div class="image-test">
+        <h3>Imagen 1: Dashboard</h3>
+        <p><strong>Ruta de BD:</strong> /resources/js/assets/projects/orion/dashboard.jpg</p>
+        <p><strong>Ruta real:</strong> /home/chris/vondrak-studio/resources/js/assets/projects/orion/dashboard.jpg</p>
+        <img src="resources/js/assets/projects/orion/dashboard.jpg" alt="Dashboard" 
+             onload="this.nextElementSibling.innerHTML='✅ Imagen cargada correctamente'" 
+             onerror="this.nextElementSibling.innerHTML='❌ Error al cargar imagen'">
+        <div class="status">⏳ Cargando...</div>
+    </div>
+
+    <div class="image-test">
+        <h3>Imagen 2: Proyectos</h3>
+        <p><strong>Ruta de BD:</strong> /resources/js/assets/projects/orion/proyectos.jpg</p>
+        <p><strong>Ruta real:</strong> /home/chris/vondrak-studio/resources/js/assets/projects/orion/proyectos.jpg</p>
+        <img src="resources/js/assets/projects/orion/proyectos.jpg" alt="Proyectos" 
+             onload="this.nextElementSibling.innerHTML='✅ Imagen cargada correctamente'" 
+             onerror="this.nextElementSibling.innerHTML='❌ Error al cargar imagen'">
+        <div class="status">⏳ Cargando...</div>
+    </div>
+
+    <div class="image-test">
+        <h3>Imagen 3: Reportes</h3>
+        <p><strong>Ruta de BD:</strong> /resources/js/assets/projects/orion/reportes.jpg</p>
+        <p><strong>Ruta real:</strong> /home/chris/vondrak-studio/resources/js/assets/projects/orion/reportes.jpg</p>
+        <img src="resources/js/assets/projects/orion/reportes.jpg" alt="Reportes" 
+             onload="this.nextElementSibling.innerHTML='✅ Imagen cargada correctamente'" 
+             onerror="this.nextElementSibling.innerHTML='❌ Error al cargar imagen'">
+        <div class="status">⏳ Cargando...</div>
+    </div>
+</body>
+</html>
