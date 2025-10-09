@@ -2,25 +2,25 @@
 
 namespace App\Mail;
 
-use App\Models\Lead;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Fluent;
 
 class NewLead extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public Lead $lead;
+    public Fluent $lead;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Lead $lead)
+    public function __construct(array $lead)
     {
-        $this->lead = $lead;
+        $this->lead = new Fluent($lead);
     }
 
     /**
@@ -29,7 +29,7 @@ class NewLead extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nuevo Lead: ' . $this->lead->name,
+            subject: 'Nuevo Lead: ' . ($this->lead->name ?? 'Lead'),
         );
     }
 
