@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreLeadRequest;
 use App\Mail\NewLead;
-use App\Models\Lead;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Http\Request;
 
 class LeadController extends Controller
 {
@@ -27,10 +25,8 @@ class LeadController extends Controller
     $data['ip'] = $request->ip();
     $data['user_agent'] = substr((string)$request->userAgent(), 0, 512);
 
-    $lead = Lead::create($data);
-
     // Notifica por email (Mailpit en dev)
-    Mail::to('hello@vondrak.dev')->send(new NewLead($lead));
+    Mail::to('hello@vondrak.dev')->send(new NewLead($data));
 
     return response()->json(['ok'=>true]);
   }

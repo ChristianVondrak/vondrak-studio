@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProjectsController extends Controller
@@ -12,24 +10,15 @@ class ProjectsController extends Controller
 
     public function show(string $slug)
     {
-        $project = Project::where('slug', $slug)->first();
+        $response = Inertia::render('marketing/projects/ShowDemo', [
+            'slug' => $slug,
+            'project' => [],
+        ])->toResponse(request());
 
-        if (!$project) {
-            $response = Inertia::render('marketing/projects/ShowDemo', [
-                'slug' => $slug,
-                'project' => [],
-            ])->toResponse(request());
-
-            if (!in_array($slug, $this->demoSlugs, true)) {
-                $response->setStatusCode(404);
-            }
-
-            return $response;
+        if (!in_array($slug, $this->demoSlugs, true)) {
+            $response->setStatusCode(404);
         }
 
-        return Inertia::render('marketing/projects/ShowDemo', [
-            'slug' => $slug,
-            'project' => $project->toFrontend(),
-        ]);
+        return $response;
     }
 }
