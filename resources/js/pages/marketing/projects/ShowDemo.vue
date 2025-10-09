@@ -228,6 +228,7 @@
 
             <!-- 5. VISUAL EVIDENCE - Galería con contexto -->
             <ProjectGallery
+              v-if="displayGallery.length"
               :images="displayGallery"
               :fallback-alt="project.title"
               title="Evidencia visual"
@@ -350,6 +351,43 @@ import { onMounted, onBeforeUnmount, ref, nextTick, computed } from 'vue'
 import { useProjectKPIs } from '@/composables/useProjectKPIs'
 import { useProjectUtils } from '@/composables/useProjectUtils'
 
+import coverPanelRRHH from '@/assets/projects/orion/dashboard.jpg'
+import galleryPanelDetalle from '@/assets/projects/orion/detalle_proyecto.jpg'
+import galleryPanelNotificaciones from '@/assets/projects/orion/notificaciones.jpg'
+import galleryPanelProcesoPago from '@/assets/projects/orion/proceso_pago.jpg'
+import galleryPanelProyectos from '@/assets/projects/orion/proyectos.jpg'
+import galleryPanelReportes from '@/assets/projects/orion/reportes.jpg'
+
+import image1 from '@/assets/projects/avanti_app/mapa.png'
+import galleryAvantiBuscador from '@/assets/projects/avanti_app/buscador.png'
+import galleryAvantiLoader from '@/assets/projects/avanti_app/loader.png'
+import galleryAvantiMapaZoom from '@/assets/projects/avanti_app/mapa_zoom.png'
+
+const makeVondrakCover = () => {
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>
+  <svg xmlns='http://www.w3.org/2000/svg' width='1600' height='900'>
+    <defs>
+      <linearGradient id='bg' x1='0' y1='0' x2='1' y2='1'>
+        <stop offset='0%' stop-color='#22d3ee'/>
+        <stop offset='100%' stop-color='#a855f7'/>
+      </linearGradient>
+      <radialGradient id='glow' cx='50%' cy='50%' r='60%'>
+        <stop offset='0%' stop-color='rgba(34,211,238,0.45)'/>
+        <stop offset='100%' stop-color='rgba(5,11,26,0)'/>
+      </radialGradient>
+    </defs>
+    <rect width='100%' height='100%' fill='#050b1a'/>
+    <rect x='60' y='60' width='1480' height='780' rx='36' fill='url(#bg)' opacity='0.18'/>
+    <circle cx='800' cy='450' r='360' fill='url(#glow)' opacity='0.6'/>
+    <text x='50%' y='46%' text-anchor='middle' fill='#f8faff' font-family='"Poppins", "Inter", sans-serif' font-size='80' font-weight='700'>Vondrak Studio</text>
+    <text x='50%' y='58%' text-anchor='middle' fill='#d0d6ff' font-family='"Inter", sans-serif' font-size='34'>Software Factory Website</text>
+    <text x='50%' y='68%' text-anchor='middle' fill='#8fa3ff' font-family='"Inter", sans-serif' font-size='24'>Branding · Frontend · Motion Design</text>
+  </svg>`
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`
+}
+
+const vondrakCover = makeVondrakCover()
+
 
 
 
@@ -378,6 +416,7 @@ type Project = {
   timeline: TimelineItem[]
   gallery?: GalleryItem[]
   galleryCaptions?: string[]
+  galleryEnabled?: boolean
   testimonial?: Testimonial
   tags?: string[]
 }
@@ -389,158 +428,306 @@ const props = defineProps<{ project?: Partial<Project>; slug?: string }>()
  * DEMO DATA — luego lo moveremos a content/ o BD
  * Si agregas imágenes de galería: import g1 from '@/assets/projects/orion/galeria-1.png' ...
  */
-const demoProject: Project = {
-  title: 'Plataforma de Gestión de Proyectos y Honorarios para Tech Savvy Way',
-  excerpt:
-  'Sistema web integral para automatizar pagos, centralizar datos y monitorear desempeño de contratistas en tiempo real mediante WorkSnaps y alertas inteligentes.',
-  cover: '/images/projects/orion/dashboard.jpg',
-  tags: ['Laravel', 'ETL', 'RRHH', 'Dashboards', 'Notificaciones'],
-
-  // MAIN content (prioritario)
-  summary: `Desarrollé una aplicación web para automatizar la gestión de proyectos, cálculo de honorarios y monitoreo de contratistas para el Grupo Tech Savvy Way. 
-
-
-`,
-  problem: `La empresa gestionaba sus proyectos y contratistas mediante hojas de cálculo y validaciones manuales, lo que generaba errores frecuentes, falta de trazabilidad y retrasos en los pagos. Los contratistas debían enviar sus propios cálculos de horas y bonos, los cuales eran validados uno por uno por el departamento de Recursos Humanos usando WorkSnaps, sin alertas ni automatización. 
-
-
-`,
-  solution: [
-  `Desarrollo de módulo para gestión de proyectos y asignación de contratistas 
-
-
-`,
-  `Proceso ETL automatizado con integración a la API de WorkSnaps 
-
-
-`,
-  `Generación automática de montos por honorarios y bonos según Activity Index 
-
-
-`,
-  `Notificaciones por correo y WhatsApp a contratistas tras la aprobación de montos 
-
-
-`,
-  `Dashboard con métricas clave para RRHH y supervisores 
-
-
-`,
-  `Alertas automáticas por desviación, inactividad o bajo rendimiento 
-
-
-`,
-  ],
-  outcomes:
-    'El sistema automatizó el 100% del cálculo de honorarios, eliminó errores en los pagos y redujo el tiempo de cierre mensual de 3 días a solo unas horas. Además, mejoró la visibilidad del desempeño de contratistas mediante estadísticas y alertas integradas, reemplazando por completo el uso de hojas de cálculo.',
-  impactBullets: [
-    '−100% errores en el cálculo de bonos y pagos',
-  '3 días → 3 horas en el cierre mensual de pagos',
-  '+90% cobertura automática en generación de montos',
-  ],
-  features: [
-    'Carga y cálculo automático de horas desde WorkSnaps',
-  `Sistema de bonificación por índice de actividad (10% y 20%) y deducciones (−10%) 
-
-
-`,
-    'Corte mensual por proyecto con cálculo consolidado',
-  `Envío de montos por correo y plantilla de WhatsApp tras la aprobación 
-
-
-`,
-    'Alerta por desviación de horas trabajadas',
-    'Dashboard de KPIs en tiempo real para RRHH',
-    'Módulo para gestión y detalle de contratistas',
-    'ETL programado vía comandos Artisan',
-  ],
-
-  // KPIs
-  kpis: [
-    {
-      label: 'Tiempo de cierre',
-      value: '3 horas',
-      tooltip: 'Duración del cierre mensual luego de la automatización',
+const demoProjects: Record<string, Project> = {
+  'panel-rrhh': {
+    title: 'Plataforma de Gestión de Proyectos y Honorarios para Tech Savvy Way',
+    excerpt:
+      'Sistema web integral para automatizar pagos, centralizar datos y monitorear desempeño de contratistas en tiempo real mediante WorkSnaps y alertas inteligentes.',
+    cover: coverPanelRRHH,
+    tags: ['Laravel', 'ETL', 'RRHH', 'Dashboards', 'Notificaciones'],
+    summary:
+      'Desarrollé una aplicación web para automatizar la gestión de proyectos, cálculo de honorarios y monitoreo de contratistas para el Grupo Tech Savvy Way.',
+    problem:
+      'La empresa gestionaba sus proyectos y contratistas mediante hojas de cálculo y validaciones manuales, lo que generaba errores frecuentes, falta de trazabilidad y retrasos en los pagos. Los cálculos de horas y bonos llegaban por correo y se revisaban uno por uno usando WorkSnaps, sin alertas ni automatización.',
+    solution: [
+      'Desarrollo de módulo para gestión de proyectos y asignación de contratistas',
+      'Proceso ETL automatizado con integración a la API de WorkSnaps',
+      'Generación automática de montos por honorarios y bonos según Activity Index',
+      'Notificaciones por correo y WhatsApp a contratistas tras la aprobación de montos',
+      'Dashboard con métricas clave para RRHH y supervisores',
+      'Alertas automáticas por desviación, inactividad o bajo rendimiento',
+    ],
+    outcomes:
+      'El sistema automatizó el 100% del cálculo de honorarios, eliminó errores en los pagos y redujo el tiempo de cierre mensual de 3 días a solo unas horas. Además, mejoró la visibilidad del desempeño de contratistas mediante estadísticas y alertas integradas.',
+    impactBullets: [
+      '−100% errores en el cálculo de bonos y pagos',
+      '3 días → 3 horas en el cierre mensual de pagos',
+      '+90% cobertura automática en generación de montos',
+    ],
+    features: [
+      'Carga y cálculo automático de horas desde WorkSnaps',
+      'Sistema de bonificación por índice de actividad (10% y 20%) y deducciones (−10%)',
+      'Corte mensual por proyecto con cálculo consolidado',
+      'Envío de montos por correo y plantilla de WhatsApp tras la aprobación',
+      'Alerta por desviación de horas trabajadas',
+      'Dashboard de KPIs en tiempo real para RRHH',
+      'Módulo para gestión y detalle de contratistas',
+      'ETL programado vía comandos Artisan',
+    ],
+    kpis: [
+      {
+        label: 'Tiempo de cierre',
+        value: '3 horas',
+        tooltip: 'Duración del cierre mensual luego de la automatización',
+      },
+      {
+        label: 'Errores de cálculo',
+        value: '0 errores',
+        tooltip: 'Errores en montos de pagos o bonos luego de la implementación',
+      },
+      {
+        label: 'Montos automáticos',
+        value: '90%',
+        tooltip: 'Porcentaje de contratistas con montos generados automáticamente',
+      },
+    ],
+    client: 'Grupo Tech Savvy Way',
+    industry: 'Tecnología / Recursos Humanos',
+    role: 'Fullstack Developer',
+    stack: [
+      'Laravel',
+      'MySQL',
+      'Blade',
+      'Tailwind CSS',
+      'Chart.js',
+      'WorkSnaps API',
+      'WhatsApp Cloud API',
+      'Docker',
+      'PHP',
+    ],
+    live: undefined,
+    repo: undefined,
+    timeline: [
+      { label: 'Análisis de requerimientos', when: 'Semana 1' },
+      { label: 'Diseño de base de datos', when: 'Semana 2' },
+      { label: 'Módulo de gestión de proyectos', when: 'Semana 3–5' },
+      { label: 'Generación de honorarios y alertas', when: 'Semana 6–9' },
+      { label: 'Notificaciones y cierre de pagos', when: 'Semana 10–12' },
+      { label: 'Dashboard de recursos humanos', when: 'Semana 13–14' },
+    ],
+    gallery: [
+      {
+        src: coverPanelRRHH,
+        caption: 'Dashboard principal con métricas de RRHH en tiempo real',
+      },
+      {
+        src: galleryPanelProyectos,
+        caption: 'Módulo de gestión de proyectos y asignación de contratistas',
+      },
+      {
+        src: galleryPanelProcesoPago,
+        caption: 'Flujo automatizado de cálculo y aprobación de pagos',
+      },
+      {
+        src: galleryPanelReportes,
+        caption: 'Sistema de reportes y métricas de desempeño',
+      },
+      {
+        src: galleryPanelNotificaciones,
+        caption: 'Alertas automáticas por inactividad y desviaciones',
+      },
+      {
+        src: galleryPanelDetalle,
+        caption: 'Vista detallada de proyecto con seguimiento de horas',
+      },
+    ],
+    testimonial: {
+      quote:
+        'Automatizamos todo el flujo de pagos y seguimiento de contratistas. Hoy no podríamos volver a usar hojas de Excel.',
+      name: 'Director de Tecnología',
+      role: 'Grupo Tech Savvy Way',
     },
-    {
-      label: 'Errores de cálculo',
-      value: '0 errores',
-      tooltip: 'Errores en montos de pagos o bonos luego de la implementación',
+  },
+  'avantiway-maps': {
+    title: 'MLS Property Search para Avanti Way Realty',
+    excerpt:
+      'Buscador inmobiliario geoespacial con filtros avanzados, sincronización MLS y experiencia de mapa responsiva para agentes y leads.',
+    cover: image1,
+    tags: [
+      'Laravel 11',
+      'Vue 3',
+      'Inertia.js',
+      'Tailwind CSS',
+      'Google Maps API',
+      'MySQL 8 Spatial',
+    ],
+    summary:
+      'Construí el módulo MLS Property Search combinando Laravel 11 y Vue 3 para ofrecer búsquedas geoespaciales con resultados en tiempo real sobre un mapa interactivo.',
+    problem:
+      'El equipo comercial trabajaba con listados y filtros limitados en una plataforma legacy. Localizar propiedades por zonas específicas tardaba minutos y no existía una visualización clara en el mapa.',
+    solution: [
+      'Migración progresiva desde CakePHP 2.x hacia una arquitectura moderna basada en Laravel 11 y Vue 3',
+      'Consultas MySQL 8 con índices espaciales (SRID 4326) para localizar propiedades dentro de polígonos, radios y límites administrativos',
+      'Servicios dedicados (MapService, GeohashService, HttpMarkers) que coordinan la creación, visibilidad y actualización de marcadores en el mapa',
+      'Integración de Google Maps API con clústeres dinámicos, soporte para GeoJSON y resaltado de marcadores sincronizado con las tarjetas de resultados',
+      'Autocompletado unificado que combina las 3 mejores coincidencias por tipo (zip code, ciudad, vecindario, condado)',
+      'Persistencia del estado del mapa, skeleton loaders y transiciones suaves para una experiencia fluida en desktop y tabletas',
+    ],
+    outcomes:
+      'Se logró reducir el tiempo promedio de respuesta de 3.2 s a 1.1 s, sincronizando en tiempo real los listados, filtros y marcadores sin recargar la página.',
+    impactBullets: [
+      '−2.1 s en tiempo de respuesta gracias a caché y consultas espaciales optimizadas',
+      'Sincronización MLS automática cada 15 minutos mediante procesos en segundo plano',
+      'Arquitectura lista para análisis territorial, geofencing y estimaciones de valor (AVM)',
+    ],
+    features: [
+      'Clústeres dinámicos, marcadores individuales y etiquetas de precio según el nivel de zoom',
+      'Dibujo de polígonos y círculos personalizados para delimitar zonas de búsqueda',
+      'Autocompletado mixto con sugerencias de vecindarios, ciudades, códigos postales y condados',
+      'Listado lateral sincronizado con hover/click sobre el mapa y paginación infinita',
+      'Procesos en cola para sincronización MLS y almacenamiento en caché con Redis',
+      'Interfaz responsive con skeletons, estados de carga y persistencia del viewport',
+      'Servicios reutilizables y tipados en TypeScript para lógica geoespacial y de marcadores',
+      'Panel interno para monitorear consultas, respuestas MLS y métricas de actividad',
+    ],
+    kpis: [
+      {
+        label: 'Tiempo de respuesta',
+        value: '1.1 s',
+        tooltip: 'Promedio tras optimización de queries espaciales y uso de caché',
+      },
+      {
+        label: 'Leads geolocalizados',
+        value: '+120%',
+        tooltip: 'Incremento en leads calificados generados desde el módulo de mapa',
+      },
+      {
+        label: 'Sync MLS',
+        value: '15 min',
+        tooltip: 'Frecuencia de sincronización automática con el MLS',
+      },
+    ],
+    client: 'Avanti Way Realty',
+    industry: 'Real Estate / PropTech',
+    role: 'Full-Stack Engineer',
+    stack: [
+      'Laravel 11',
+      'Vue 3',
+      'Inertia.js',
+      'Tailwind CSS',
+      'Google Maps JS API',
+      'MySQL 8 (Spatial)',
+      'Docker',
+    ],
+    live: undefined,
+    repo: undefined,
+    timeline: [
+      { label: 'Discovery y arquitectura', when: 'Semanas 1–2' },
+      { label: 'Migración base legacy', when: 'Semanas 3–5' },
+      { label: 'Motor geoespacial y servicios', when: 'Semanas 6–9' },
+      { label: 'Interfaz Vue + Google Maps', when: 'Semanas 10–11' },
+      { label: 'Testing con agentes y QA', when: 'Semanas 12–13' },
+      { label: 'Despliegue y monitoreo', when: 'Semana 14' },
+    ],
+    gallery: [
+      {
+        src: image1,
+        caption: 'Mapa MLS con filtros activos y clústeres por densidad',
+      },
+      {
+        src: galleryAvantiBuscador,
+        caption: 'Buscador geoespacial con sugerencias por ciudad, ZIP y vecindario',
+      },
+      {
+        src: galleryAvantiLoader,
+        caption: 'Estado de carga con skeletons mientras se sincronizan resultados',
+      },
+      {
+        src: galleryAvantiMapaZoom,
+        caption: 'Marcadores con etiquetas de precio visibles a altos niveles de zoom',
+      },
+    ],
+    testimonial: {
+      quote:
+        'El nuevo mapa MLS transformó la experiencia de búsqueda para agentes y leads, ofreciendo velocidad, precisión y una interfaz moderna.',
+      name: 'Product Owner MLS',
+      role: 'Avanti Way Realty',
     },
-    {
-  label: 'Montos automáticos',
-      value: '90%',
-  tooltip: 'Porcentaje de contratistas con montos generados automáticamente',
-    },
-  ],
-
-  // ASIDE
-  client: 'Grupo Tech Savvy Way',
-  industry: 'Tecnología / Recursos Humanos',
-  role: 'Fullstack Developer',
-  stack: [
-    'Laravel',
-    'MySQL',
-    'Blade',
-    'Tailwind CSS',
-    'Chart.js',
-    'WorkSnaps API',
-    'WhatsApp Cloud API',
-    'Docker',
-    'PHP',
-  ],
-  live: undefined,
-  repo: undefined,
-  timeline: [
-    { label: 'Análisis de requerimientos', when: 'Semana 1' },
-    { label: 'Diseño de base de datos', when: 'Semana 2' },
-    { label: 'Módulo de gestión de proyectos', when: 'Semana 3–5' },
-    { label: 'Generación de honorarios y alertas', when: 'Semana 6–9' },
-    { label: 'Notificaciones y cierre de pagos', when: 'Semana 10–12' },
-    { label: 'Dashboard de recursos humanos', when: 'Semana 13–14' },
-  ],
-
-  // Galería (captions del cliente -> placeholders dinámicos)
-  gallery: [
-    { 
-      src: '/images/projects/orion/dashboard.jpg',
-      caption: 'Dashboard principal con métricas de RRHH en tiempo real' 
-    },
-    { 
-      src: '/images/projects/orion/proyectos.jpg',
-      caption: 'Módulo de gestión de proyectos y asignación de contratistas' 
-    },
-    { 
-      src: '/images/projects/orion/proceso_pago.jpg',
-      caption: 'Flujo automatizado de cálculo y aprobación de pagos' 
-    },
-    { 
-      src: '/images/projects/orion/reportes.jpg',
-      caption: 'Sistema de reportes y métricas de desempeño' 
-    },
-    { 
-      src: '/images/projects/orion/notificaciones.jpg',
-      caption: 'Alertas automáticas por inactividad y desviaciones' 
-    },
-    { 
-      src: '/images/projects/orion/detalle_proyecto.jpg',
-      caption: 'Vista detallada de proyecto con seguimiento de horas' 
-    },
-  ],
-
-  // Testimonial (opcional)
-  testimonial: {
-    quote:
-      'Automatizamos todo el flujo de pagos y seguimiento de contratistas. Hoy no podríamos volver a usar hojas de Excel.',
-    name: 'Director de Tecnología',
-    role: 'Grupo Tech Savvy Way',
+  },
+  'vondrak-studio': {
+    title: 'Vondrak Studio — Software Factory Website',
+    excerpt:
+      'Landing page interactiva que comunica la identidad, servicios y filosofía de la software factory fundada por mí.',
+    cover: vondrakCover,
+    tags: ['Branding', 'Frontend', 'Motion Design'],
+    summary:
+      'Diseñé y desarrollé la presencia digital de Vondrak Studio con una experiencia inmersiva que combina animación 3D en tiempo real, componentes Vue modulares y un performance superior al 90% en Lighthouse.',
+    problem:
+      'Necesitaba una web que posicionara a Vondrak Studio como software factory moderna, transmitiendo branding, servicios y casos de éxito sin sacrificar velocidad ni capacidad de expansión.',
+    solution: [
+      'Arquitectura modular en Vue 3 con Composition API para secciones de servicios, planes, proyectos y contacto',
+      'Hero interactivo construido con Vanta.js y controles de rendimiento para mantener 60 FPS en desktop y móviles',
+      'Sistema de precios animado con Framer Motion y microinteracciones alineadas a la identidad visual',
+      'Integración de portafolio con cargas progresivas y animaciones escalonadas',
+      'Pipeline optimizado con Vite, Tailwind CSS y Netlify para despliegues continuos',
+      'Mejoras SEO (meta tags, schema) y optimización de assets para mantener tiempos < 2 s',
+    ],
+    outcomes:
+      'El sitio consolidó la identidad digital del estudio, elevó la retención de usuarios en scroll por encima del 70% y dejó lista la base para escalar a blog y área privada.',
+    impactBullets: [
+      '+90 Lighthouse en Performance, Accessibility y SEO',
+      '<2 s tiempo de carga promedio medido en Netlify Edge',
+      '+70% usuarios completan más del 75% de scroll gracias a la interacción y narrativa visual',
+    ],
+    features: [
+      'Hero WebGL interactivo con VantaGlobe y controles responsivos',
+      'Componentes Vue reutilizables para servicios, precios y proyectos',
+      'Transiciones suaves con Framer Motion y CSS variables de diseño',
+      'Grilla de proyectos con animaciones progresivas y lazy-loading',
+      'Diseño responsive con enfoque mobile-first y tipografía optimizada',
+      'Optimización SEO técnica (meta, OG, schema) y bundle ligero con Vite',
+    ],
+    kpis: [
+      {
+        label: 'Score Lighthouse',
+        value: '90+',
+        tooltip: 'Calificación promedio en Performance, Accessibility y SEO',
+      },
+      {
+        label: 'Tiempo de carga',
+        value: '<2 s',
+        tooltip: 'TTFB y LCP medidos tras optimizaciones en Netlify',
+      },
+      {
+        label: 'Retención scroll',
+        value: '+70%',
+        tooltip: 'Usuarios que recorren más del 75% de la página',
+      },
+    ],
+    client: 'Vondrak Studio',
+    industry: 'Software Factory / Branding',
+    role: 'Founder & Full-Stack Developer',
+    stack: [
+      'Vue 3',
+      'Vite',
+      'Tailwind CSS',
+      'TypeScript',
+      'Vanta.js',
+      'Framer Motion',
+      'Netlify',
+    ],
+    live: 'https://vondrak.studio',
+    repo: undefined,
+    timeline: [
+      { label: 'Branding & narrativa', when: 'Semanas 1–2' },
+      { label: 'Arquitectura Vue & componentes', when: 'Semanas 3–4' },
+      { label: 'Animaciones y motion system', when: 'Semanas 5–6' },
+      { label: 'Optimización SEO y performance', when: 'Semanas 7–8' },
+      { label: 'Lanzamiento en Netlify', when: 'Semana 9' },
+    ],
+    galleryEnabled: false,
+    testimonial: undefined,
   },
 }
 
+const defaultSlug = 'panel-rrhh'
+const fallbackKey = props.slug && demoProjects[props.slug] ? props.slug : defaultSlug
+const fallbackProject = demoProjects[fallbackKey] || demoProjects[defaultSlug]
+
 // Merge: datos del backend sobre el demo para no dejar campos fuera
-const project: Project = Object.assign({}, demoProject, props.project || {})
+const project: Project = Object.assign({}, fallbackProject, props.project || {})
 if (!project.cover) {
-  project.cover = '/images/projects/orion/dashboard.jpg'
+  project.cover = fallbackProject.cover
 }
 
 // --- Navegación anclada y scrollspy ---
@@ -619,6 +806,9 @@ const makePlaceholder = (title: string, i: number): string => {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`
 }
 const displayGallery = computed(() => {
+  if (project.galleryEnabled === false) {
+    return []
+  }
   if (project.gallery && project.gallery.length) {
     return project.gallery.map((item, index) => ({
       src: item.src || makePlaceholder(project.title, index),

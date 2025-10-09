@@ -8,16 +8,23 @@ use Inertia\Inertia;
 
 class ProjectsController extends Controller
 {
+    private array $demoSlugs = ['panel-rrhh', 'avantiway-maps', 'vondrak-studio'];
+
     public function show(string $slug)
     {
         $project = Project::where('slug', $slug)->first();
 
         if (!$project) {
-            // Puedes mostrar 404 o fallback a demo vacío
-            return Inertia::render('marketing/projects/ShowDemo', [
+            $response = Inertia::render('marketing/projects/ShowDemo', [
                 'slug' => $slug,
                 'project' => [],
-            ])->toResponse(request())->setStatusCode(404);
+            ])->toResponse(request());
+
+            if (!in_array($slug, $this->demoSlugs, true)) {
+                $response->setStatusCode(404);
+            }
+
+            return $response;
         }
 
         return Inertia::render('marketing/projects/ShowDemo', [
