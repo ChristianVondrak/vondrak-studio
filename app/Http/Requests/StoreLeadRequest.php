@@ -13,7 +13,7 @@ class StoreLeadRequest extends FormRequest
             'email'       => ['required', 'email', 'max:160'],
             'serviceType' => ['required', 'in:informativa,landing,tienda'],
             'budget'      => ['required', 'in:menos-400,400-800,800-1500,1500-3000,3000-5000,mas-5000'],
-            'message'     => ['required', 'string', 'min:10', 'max:3000'],
+            'message'     => ['required', 'string', 'max:3000'],
             'company'     => ['nullable', 'size:0'],
 
             // tracking (opcionales)
