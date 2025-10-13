@@ -8,9 +8,8 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Fluent;
-use Illuminate\Mail\Mailables\Address;
 
-class NewLead extends Mailable
+class LeadConfirmation extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -24,35 +23,23 @@ class NewLead extends Mailable
         $this->lead = new Fluent($lead);
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nuevo Lead: ' . ($this->lead->name ?? 'Lead'),
-            replyTo: $this->lead->email ? [new Address($this->lead->email, $this->lead->name ?? null)] : [],
+            subject: '¡Gracias por tu solicitud, ' . ($this->lead->name ?? 'cliente') . '!',
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
-            view: 'emails.leads.new',
+            view: 'emails.leads.confirmation',
             with: [
                 'lead' => $this->lead,
             ],
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
     public function attachments(): array
     {
         return [];
