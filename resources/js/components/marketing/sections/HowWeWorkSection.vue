@@ -1,12 +1,13 @@
 <template>
   <section
     ref="wrapper"
-    :class="['how-work', { 'how-work--wide': props.wide, 'how-work--reduced': prefersReducedMotion }]"
+    :class="['how-work', { 'how-work--reduced': prefersReducedMotion }]"
   >
+    <div class="how-work__bg" ref="bgElement"></div>
     <div class="how-work__sticky">
       <div ref="track" class="how-work__track">
         <article class="how-work__step how-work__step--intro">
-          <div class="how-work__intro-shell">
+          <div class="how-work__intro-shell" ref="introElement">
             <span class="how-work__eyebrow">Proceso</span>
             <h2 class="how-work__headline">Cómo trabajamos</h2>
             <p class="how-work__intro-copy">
@@ -73,11 +74,12 @@ const DEFAULT_PALETTE = [
 
 const props = defineProps<{
   steps?: Step[]
-  wide?: boolean
 }>()
 
 const wrapper = ref<HTMLElement | null>(null)
 const track = ref<HTMLElement | null>(null)
+const bgElement = ref<HTMLElement | null>(null)
+const introElement = ref<HTMLElement | null>(null)
 let rafId: number | null = null
 
 const prefersReducedMotion =
@@ -149,11 +151,78 @@ function handleScroll() {
 
     if (prefersReducedMotion) {
       track.value.style.transform = 'none'
+      // Incluso con movimiento reducido, actualizamos el fondo para mantener contraste del navbar
+      updateBackground()
       return
     }
 
     applyTransform(getProgress())
+    updateBackground()
   })
+}
+
+function updateBackground() {
+  if (!wrapper.value || !bgElement.value) return
+
+  const rect = wrapper.value.getBoundingClientRect()
+  const viewportHeight = window.innerHeight
+  
+  let progress = 0
+  
+  // FASE 1: Entrando a la sección (desde arriba)
+  // Cuando top está entre viewportHeight y 0
+  if (rect.top > 0) {
+    // La sección aún no está completamente en viewport
+    const rawProgress = Math.max(0, Math.min(1, 1 - (rect.top / viewportHeight)))
+    const startThreshold = 0.4
+    progress = Math.max(0, Math.min(1, (rawProgress - startThreshold) / (1 - startThreshold)))
+  }
+  // FASE 2: La sección está en viewport (durante el carrusel)
+  // Cuando top está entre 0 y -(sectionHeight - viewportHeight)
+  else if (rect.top <= 0 && rect.bottom >= viewportHeight) {
+    // Mantener blanco durante todo el scroll horizontal
+    progress = 1
+  }
+  // FASE 3: Saliendo de la sección (hacia contacto)
+  // Cuando bottom está por debajo del viewport
+  else if (rect.bottom < viewportHeight) {
+    // Calcular qué tan lejos estamos de la sección
+    const distanceOut = viewportHeight - rect.bottom
+    const fadeDistance = viewportHeight * 0.3 // Hacer la transición en un 30% de una pantalla
+    const exitFade = Math.min(1, distanceOut / fadeDistance)
+    progress = 1 - exitFade // De blanco (1) a oscuro (0)
+  }
+  
+  // Interpolar entre los colores del fondo
+  const darkColor = { r: 11, g: 18, b: 32 } // #0b1220
+  const lightColor = { r: 255, g: 255, b: 255 } // #ffffff
+  
+  const r = Math.round(darkColor.r + (lightColor.r - darkColor.r) * progress)
+  const g = Math.round(darkColor.g + (lightColor.g - darkColor.g) * progress)
+  const b = Math.round(darkColor.b + (lightColor.b - darkColor.b) * progress)
+  
+  bgElement.value.style.backgroundColor = `rgb(${r}, ${g}, ${b})`
+  
+  // Toggle global class to adapt navbar/link colors when background is white
+  const isWhitePhase = progress >= 0.98
+  const rootEl = document.documentElement
+  if (isWhitePhase) {
+    rootEl.classList.add('bg-phase--light')
+  } else {
+    rootEl.classList.remove('bg-phase--light')
+  }
+  
+  // Cambiar el color del texto: blanco cuando fondo es oscuro, oscuro cuando fondo es blanco
+  if (introElement.value) {
+    const textDarkColor = { r: 255, g: 255, b: 255 } // #ffffff (texto blanco)
+    const textLightColor = { r: 17, g: 17, b: 17 } // #111111 (texto oscuro)
+    
+    const tr = Math.round(textDarkColor.r + (textLightColor.r - textDarkColor.r) * progress)
+    const tg = Math.round(textDarkColor.g + (textLightColor.g - textDarkColor.g) * progress)
+    const tb = Math.round(textDarkColor.b + (textLightColor.b - textDarkColor.b) * progress)
+    
+    introElement.value.style.color = `rgb(${tr}, ${tg}, ${tb})`
+  }
 }
 
 function handleResize() {
@@ -165,6 +234,7 @@ onMounted(async () => {
   await nextTick()
   recalcLayout()
   handleScroll()
+  updateBackground()
 
   window.addEventListener('resize', handleResize, { passive: true })
   window.addEventListener('orientationchange', handleResize)
@@ -180,6 +250,9 @@ onBeforeUnmount(() => {
     cancelAnimationFrame(rafId)
     rafId = null
   }
+
+  // Limpia clase global si quedó activa
+  document.documentElement.classList.remove('bg-phase--light')
 })
 
 watch(visibleSteps, async () => {
@@ -198,23 +271,37 @@ watch(visibleSteps, async () => {
   --hw-card-border: rgba(17, 17, 17, 0.08);
   --hw-top-gap: clamp(6rem, 18vh, 10rem);
   --hw-bottom-gap: var(--hw-top-gap);
-  background: var(--hw-bg);
+  background: transparent;
   color: var(--hw-text-primary);
+  position: relative;
+}
+
+.how-work__bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #0b1220;
+  transition: background-color 0.1s linear;
+  z-index: -1;
 }
 
 .how-work__sticky {
   position: sticky;
   top: 0;
   height: 100vh;
-  background: var(--hw-bg);
+  background: transparent;
   overflow: hidden;
+  z-index: 1;
 }
 
 .how-work__eyebrow {
   font-size: 0.85rem;
   letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: rgba(17, 17, 17, 0.55);
+  opacity: 0.65;
+  color: inherit;
 }
 
 .how-work__track {
@@ -229,9 +316,7 @@ watch(visibleSteps, async () => {
   transition: opacity 0.6s ease, transform 0.08s linear;
 }
 
-/* .how-work--wide .how-work__track {
-  padding-inline: clamp(5vw, 8vw, 11vw);
-} */
+/* (wide) eliminado: padding-inline adicional ya no se usa */
 
 .how-work--reduced .how-work__track {
   display: grid;
@@ -270,6 +355,8 @@ watch(visibleSteps, async () => {
   width: min(720px, 80vw);
   text-align: center;
   margin-inline: auto;
+  color: #ffffff;
+  transition: color 0.1s linear;
 }
 
 .how-work__headline {
@@ -277,12 +364,14 @@ watch(visibleSteps, async () => {
   font-weight: 800;
   letter-spacing: 0;
   text-transform: uppercase;
+  color: inherit;
 }
 
 .how-work__intro-copy {
   font-size: clamp(1.05rem, 0.8vw + 1rem, 1.35rem);
   line-height: 1.7;
-  color: var(--hw-text-muted);
+  opacity: 0.75;
+  color: inherit;
 }
 
 @media (max-width: 959px) {

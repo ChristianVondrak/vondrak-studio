@@ -8,14 +8,11 @@ import ContactSection from '@/components/marketing/sections/ContactSection.vue';
 </script>
 
 <template>
-  <!-- <div style="background:#0b1220; min-height:100vh; color:#fff"> -->
     <DefaultLayout>
       <HeroSection />
       <ServicesSection />
-      <HowWeWorkSection wide />
+      <HowWeWorkSection />
       <WorkSection />
       <ContactSection />
     </DefaultLayout>
-
-    <!-- resto de secciones -->
 </template>
