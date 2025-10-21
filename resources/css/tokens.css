@@ -9,5 +9,16 @@
   --accent-gradient: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
   --radius: 18px;
   --page-bg: #0b1220;       /* deep navy */
+  
+  /* Force dark theme colors - override browser theme */
+  --foreground: #e6f1ff;     /* white text for dark theme */
+  --foreground-muted: #9fb0c8; /* muted text for dark theme */
+  --background: #0b1220;     /* dark background */
+  --surface: #0b1220;
+  --surface-2: #162030;
+  --surface-3: #1e2a3e;
+  --surface-4: #2a3650;
+  --destructive: #ef4444;
 }
+
 

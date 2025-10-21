@@ -17,7 +17,7 @@
           </div>
         </div>
 
-        <form class="contact-form glass" v-reveal:up.d140 @submit.prevent="handleSubmit" novalidate aria-describedby="contact-status" aria-live="polite">
+  <form class="contact-form glass" v-reveal:up.d140 @submit.prevent="handleSubmit" novalidate aria-describedby="contact-status" aria-live="polite">
           <!-- Nombre -->
           <label class="sr-only" for="name">Nombre</label>
           <input v-model="form.name" id="name" name="name" type="text"
@@ -51,7 +51,7 @@
           <textarea v-model="form.message" name="message" rows="4"
                     placeholder="¿Qué necesitas? Cuéntame más detalles sobre tu proyecto..." required />
 
-          <!-- (consent removed) -->
+          <!-- consentimiento removido por requerimiento: no se solicita -->
 
           <!-- Honeypot -->
           <input v-model="form.company" name="company" type="text" tabindex="-1"
@@ -103,7 +103,7 @@ const form = ref({
 const loading = ref(false)
 const status = ref<'idle'|'ok'|'error'>('idle')
 
-// Lee CSRF de la meta tag de Blade
+// CSRF desde meta tag de Blade
 const csrf = () => (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || ''
 
 onMounted(() => {
@@ -135,8 +135,8 @@ async function handleSubmit() {
     if (!res.ok) throw new Error('bad status')
     status.value = 'ok'
 
-    // Evento de analytics opcional:
-    // window.gtag?.('event','lead_submitted',{ service: form.value.serviceType, budget: form.value.budget })
+  // Evento de analytics opcional: descomentarlo si se usa gtag
+  // window.gtag?.('event','lead_submitted',{ service: form.value.serviceType, budget: form.value.budget })
 
     // reset suave
     form.value = {
